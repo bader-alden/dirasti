@@ -5,9 +5,9 @@ import 'package:meta/meta.dart';
 
 part 'bottom_nav_event.dart';
 part 'bottom_nav_state.dart';
-int index =0;
+int index =2;
 class BottomNavBloc extends Bloc<BottomNavEvent, BottomNavState> {
-  BottomNavBloc() : super(BottomNavState(5)) {
+  BottomNavBloc() : super(BottomNavState(2)) {
    change_index(index);
   }
 
