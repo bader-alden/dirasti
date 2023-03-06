@@ -1,4 +1,5 @@
 import 'package:dirasti/Bloc/bottom_nav/bottom_nav_bloc.dart';
+import 'package:dirasti/Layout/profile.dart';
 import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,12 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 0,),
             Row(children: [
               SizedBox(width: 15,),
-              InkWell(onTap:  (){},child: Image.asset("assets/avatar.png",height: 60)),
+              InkWell(onTap:  ()
+                  async {
+                   await Navigator.push(context, MaterialPageRoute(builder: (contexta)=>Profile(context.read<MainBloc>().user_model?.name??"")));
+                  context.read<MainBloc>().add(init());
+                  },child: Hero(tag: "porfile",child: Material(color: Colors.transparent,child: Image.asset("assets/avatar.png",height: 60)))),
+
               Spacer(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +43,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Text("مرحبا بك",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
                   SizedBox(height: 7,),
-                  Text((context.read<MainBloc>().user_model?.name??"aaaaaaa")),
+                  Hero(tag:"user name",child: Material(color: Colors.transparent,child: Text((context.read<MainBloc>().user_model?.name??"....."),style: TextStyle(backgroundColor: Colors.transparent),))),
                 ],
               ),
               SizedBox(width: 20,),
@@ -97,7 +103,8 @@ home_page_grade_item(BuildContext context, int index,subject_module model) {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.bolt_outlined,size: 50,),
+              Image.asset("assets/"+model!.subject!+".png",height: 65,),
+              //Icon(Icons.bolt_outlined,size: 50,),
               SizedBox(height: 20,),
               Text(model!.subject!)
             ],

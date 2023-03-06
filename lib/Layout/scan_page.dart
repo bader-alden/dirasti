@@ -1,3 +1,4 @@
+import 'package:dirasti/utils/const.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -58,103 +59,29 @@ class _ScanPageState extends State<ScanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              flex: 4,
-              child: Stack(
-                children: [
-                  _buildQrView(context),
-                  if (result != null)
-                    Center(
-                      child: QrImage(
-                        data: result!.code!,
-                        version: QrVersions.auto,
-                        size: 320,
-                        gapless: false,
-                        embeddedImage: AssetImage('assets/qr_logo.png'),
-                        embeddedImageStyle: QrEmbeddedImageStyle(
-                          size: Size(80, 80),
-                        ),
-                      )
-                    ),
-                  // if (result != null)
-                  //   Center(child: Icon(Icons.ac_unit,color: Colors.red,))
-                ],
-              )),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  if (result != null) Text('Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}') else const Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text('Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause', style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume', style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+      body:  Stack(
+        alignment: Alignment.center,
+        children: [
+          _buildQrView(context),
+          if(result!=null)
+          Column(
+            children: [
+              Spacer(),
+              Spacer(),
+              Spacer(),
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context,result?.code);
+                },
+                child: Container(
+                  decoration: BoxDecoration(color: orange,borderRadius: BorderRadius.circular(15)),
+                  width: MediaQuery.of(context).size.width/1.5,
+                  height: 50,
+                  child: Center(child: Text("بحث",style: TextStyle(fontSize: 20,color: Colors.white),)),
+                ),
               ),
-            ),
+              Spacer(),
+            ],
           )
         ],
       ),
@@ -169,7 +96,7 @@ class _ScanPageState extends State<ScanPage> {
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(borderColor: Colors.red, borderRadius: 10, borderLength: 30, borderWidth: 10, cutOutSize: scanArea),
+      overlay: QrScannerOverlayShape(borderColor: blue, borderRadius: 10, borderLength: 30, borderWidth: 10, cutOutSize: scanArea),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }
@@ -182,6 +109,9 @@ class _ScanPageState extends State<ScanPage> {
       setState(() {
         result = scanData;
       });
+      // if(scanData.code!=""&&scanData.code!=null){
+      //   Navigator.pop(context,scanData.code);
+      // }
     });
   }
 

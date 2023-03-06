@@ -4,7 +4,9 @@ part of 'user_bloc.dart';
 abstract class UserState {}
 
 class UserInitial extends UserState {}
+
 class scss_signin extends UserState {}
+
 class scss_login extends UserState {
   final name;
 
@@ -26,3 +28,5 @@ class init_state extends UserState {
 
   init_state( this.string, this.id);
 }
+class scss_update_state extends UserState {}
+class faile_update_state extends UserState {}

@@ -1,5 +1,6 @@
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../Bloc/user/user_bloc.dart';
@@ -59,7 +60,12 @@ class Login extends StatelessWidget {
                   children: [
                     SizedBox(width: 10,),
                     Center(child: Text("09",style: TextStyle(fontSize: 20),)),
-                    Expanded(child: TextFormField(controller: _number_con,decoration: InputDecoration(border: InputBorder.none),keyboardType: TextInputType.number,style: TextStyle(fontSize: 20),)),
+                    Expanded(child: TextFormField(
+                      controller: _number_con,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly,LengthLimitingTextInputFormatter(8)],
+                      decoration: InputDecoration(border: InputBorder.none),
+                      keyboardType: TextInputType.number,
+                      style: TextStyle(fontSize: 20),)),
                   ],
                 ),
               ),
@@ -108,16 +114,25 @@ class Login extends StatelessWidget {
               Spacer(),
               StatefulBuilder(
                 builder: (context,states) {
-                  return TextButton(onPressed: (){
-                      if(_number_con.text.length==8&&!_is_loading){
-                        states((){
-                          _is_loading=true;
-                        });
-                          context.read<UserBloc>().add(user_login(_number_con.text));
-                      }else{
-                        Tost("يرجى إدخال رقم جوال صالح", Colors.red);
-                      }
-                  }, child: Container(width: MediaQuery.of(context).size.width/1.2,height: 60,decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: blue),child: Center(child: _is_loading?CircularProgressIndicator(color: Colors.white,):Text("تسجيل الدخول",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)))),);
+                  return Center(
+                    child: TextButton(onPressed: (){
+                        if(_number_con.text.length==8&&!_is_loading){
+                          states((){
+                            _is_loading=true;
+                          });
+                            context.read<UserBloc>().add(user_login(_number_con.text));
+                        }else{
+                          Tost("يرجى إدخال رقم جوال صالح", Colors.red);
+                        }
+                    }, child: AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
+                        width: _is_loading ? 60:MediaQuery.of(context).size.width/1.2,
+                        height: 60,
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: blue),
+                        child: Center(child: _is_loading
+                            ?CircularProgressIndicator(color: Colors.white,)
+                            :Text("تسجيل الدخول", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)))),),
+                  );
                 }
               ),
               Spacer(),

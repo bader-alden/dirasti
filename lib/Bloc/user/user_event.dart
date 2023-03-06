@@ -17,8 +17,17 @@ class user_init extends UserEvent{
   user_init(this.id);
 }
 class grade_init extends UserEvent{}
+
 class user_login extends UserEvent{
   final String num ;
 
   user_login(this.num);
+}
+class user_update extends UserEvent{
+  final String name;
+  final String email;
+  final String mobile_id;
+  final String grade;
+  final int is_male;
+  user_update (this.name, this.email, this.mobile_id, this.is_male,this.grade);
 }

@@ -22,6 +22,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<user_signin>(signin);
     on<grade_init>(grade);
     on<user_login>(login);
+    on<user_update>(user_update_void);
   }
 
 
@@ -91,10 +92,32 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
 
     //`name`, `email`, `is_male`, `course_file`,`grade`,`mobile_id`,`secret_code`
+
   }
 
 
 
+  Future<FutureOr<void>> user_update_void(user_update event, Emitter<UserState> emit) async {
+    await dio.post_data(url:"/account/update_account",quary: {
+      "name":event.name,
+      "email":event.email,
+      "is_male":event.is_male,
+      "grade":event.grade,
+      "mobile_id":event.mobile_id,
+      "secret_code":cache.get_data("scode"),
+    }).then((value){
+      print(event.name);
+      print(event.name);
+      print(event.name);
+      if(value?.data == "error"){
+        emit(faile_update_state());
+      }else{
+        emit(scss_update_state());
+      }
+      print(value?.data);
+    });
+
+  }
   // Future<FutureOr<void>> init(user_init event, Emitter<UserState> emit) async {
   //   print("aaaaaaaaaaaaaaaaaaaaa");
   //   await dio.post_data(url:"/account/login_id",quary: {

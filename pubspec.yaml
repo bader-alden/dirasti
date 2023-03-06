@@ -48,6 +48,7 @@ dependencies:
   dio:
   fluttertoast:
   uuid:
+  better_player:
 
 
 dev_dependencies:

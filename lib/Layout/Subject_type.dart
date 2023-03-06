@@ -36,7 +36,7 @@ class Subject_type extends StatelessWidget {
                 SizedBox(height: 0,),
             Expanded(child: Column(
               children: [
-                _subject_type_list_item("الكورسات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse()))),
+                _subject_type_list_item("الكورسات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject, )))),
                 _subject_type_list_item("الورقيات",()=>Navigator()),
                 _subject_type_list_item("الإختبارات",()=>Navigator()),
               ],
