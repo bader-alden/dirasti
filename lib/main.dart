@@ -94,8 +94,8 @@ class App extends StatelessWidget {
                         children: [
                           NotificationPage(),
                           AddCourse(),
-                          Calendar(),
                           HomePage(),
+                          Calendar(),
                           Setting(),
                         ],
                       ),

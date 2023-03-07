@@ -1,8 +1,14 @@
 import 'package:container_tab_indicator/container_tab_indicator.dart';
+import 'package:dirasti/Layout/new_calendar.dart';
+import 'package:dirasti/module/calendar_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:intl/date_symbol_data_local.dart';
+
+import '../Bloc/calendar/calendar_bloc.dart';
 TabController? _month_con ;
 TabController? _day_con ;
 List<String> month_list = ['يناير' , 'فبراير' , 'مارس' , 'أبريل' , 'مايو' , 'يونيو' , 'يوليو' , 'أغسطس' , 'سبتمبر'  ,'أكتوبر'  , 'نوفمبر'  , 'ديسمبر'];
@@ -14,19 +20,36 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
+class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   @override
   void initState() {
-    _month_con=TabController(length:12, vsync: this,initialIndex: DateTime.now().month-1);
+    // TODO: implement initState
+    _month_con=TabController(length:12,vsync: this,initialIndex: DateTime.now().month-1);
     number_of_day =  check_number_day(DateTime.now().month);
-    _day_con=TabController(length:number_of_day, vsync: this,initialIndex: DateTime.now().day-1);
-
+    _day_con=TabController(length:number_of_day,vsync: this, initialIndex: DateTime.now().day-1);
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
+
+    return BlocProvider(
+  create: (context) => CalendarBloc()..add(init_event((DateTime.now().month-1).toString()+"/"+(DateTime.now().day-1).toString())),
+  child: BlocConsumer<CalendarBloc, CalendarState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
     return Scaffold(
-      floatingActionButton: CircleAvatar(radius: 35,
-      child: Icon(Icons.add,size: 40,)),
+      floatingActionButton: InkWell(
+        onTap: () async {
+         // context.read<CalendarBloc>().add(insert_event("7/3", "12:20", "bbbba", "bbbbbb"));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context)=>NewCalendar()));
+        context.read<CalendarBloc>().add(get_event(_month_con!.index.toString()+"/"+_day_con!.index.toString()));
+        },
+        child: CircleAvatar(radius: 35,
+        backgroundColor: blue,
+        child: Icon(Icons.add,size: 40,color: Colors.white,)),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       appBar: AppBar(
         backgroundColor: white,
@@ -58,10 +81,10 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
                     padding: const EdgeInsets.all(20),
                   ),
                   onTap: (value){
-                    setState(() {
+                     setState(() {  });
                       number_of_day =  check_number_day(value+1);
-                      _day_con=TabController(length:number_of_day, vsync: this,initialIndex: DateTime.now().day-1);
-                    });
+                      _day_con=TabController(length:number_of_day,vsync: this,initialIndex: DateTime.now().day-1);
+
                   },
                 ),
               ),
@@ -104,7 +127,8 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
                     padding: const EdgeInsets.all(0),
                   ),
                   onTap: (value) async {
-                    setState(()  {});
+                   // setState(()  {});
+                    context.read<CalendarBloc>().add(get_event(_month_con!.index.toString()+"/"+value.toString()));
                     print(value);
                     print(_month_con!.index);
                     print("----------------------");
@@ -118,12 +142,15 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
               itemBuilder: (context,index){
-              return _calendar_item(index,context);
-            },itemCount: 3,),
+              return _calendar_item(index,context,context.read<CalendarBloc>().all_data[index]);
+            },itemCount: context.read<CalendarBloc>().all_data.length,),
           )
         ],
       ),
     );
+  },
+),
+);
   }
 
   int check_number_day(month) {
@@ -133,6 +160,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
       return 30;
     }
   }
+
   String get_day_name(int e)  {
     var num_day = e>=10 ?(e).toString() : "0"+(e).toString();
     var num_month = _month_con!.index+1>=10 ?(_month_con!.index+1).toString() : "0"+(_month_con!.index+1).toString();
@@ -145,7 +173,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
     return formatted ;
   }
 
-  Widget _calendar_item(int index, BuildContext context) {
+  Widget _calendar_item(int index, BuildContext context,calendar_module model) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -158,13 +186,13 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin{
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("مادة العلوم",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-                  Text("aaaaaaaaaa"),
-                  Text("aaaaaaaaaaa")
+                  Text(model.subject ?? "مادة العلوم", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                  Text(model.body??"المهمة"),
+                  Text(model.time??"الوقت")
                 ],
               ),
               SizedBox(width: 20,),
-              Image.asset("assets/عربي.png",width: 50,),
+              Image.asset("assets/عربي.png", width: 50,),
               SizedBox(width: 10,),
             ],
           ),

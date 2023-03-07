@@ -36,3 +36,10 @@ class watch_event extends MainEvent{
 
   watch_event( this.part,);
 }
+class get_exam_event extends MainEvent{
+  final grade ;
+  final subject ;
+
+  get_exam_event(this.grade, this.subject);
+
+}

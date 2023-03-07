@@ -1,3 +1,4 @@
+import 'package:dirasti/Layout/all_exam.dart';
 import 'package:dirasti/Layout/teacher_course.dart';
 import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/const.dart';
@@ -36,9 +37,9 @@ class Subject_type extends StatelessWidget {
                 SizedBox(height: 0,),
             Expanded(child: Column(
               children: [
-                _subject_type_list_item("الكورسات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject, )))),
-                _subject_type_list_item("الورقيات",()=>Navigator()),
-                _subject_type_list_item("الإختبارات",()=>Navigator()),
+                _subject_type_list_item("الكورسات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"course" )))),
+                _subject_type_list_item("الورقيات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"file" )))),
+                _subject_type_list_item("الإختبارات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,)))),
               ],
             )),
                 SizedBox(height: 30,),

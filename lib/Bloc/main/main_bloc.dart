@@ -23,6 +23,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<get_course_event>(get_course_void);
     on<get_course_details_event>(get_course_details_void);
     on<watch_event>(watch_void);
+    on<get_exam_event>(get_exam_void);
   }
   user_module? user_model;
   List<subject_module> subject_list=[];
@@ -173,6 +174,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     course_list.clear();
     emit(loading_porfile_state());
    await dio.get_data(url: "/index/my_course",quary: {"user_id":cache.get_data("id"),"is_course":event.type}).then((value) {
+     print(value?.data);
      if(value?.data[0].length==0){
        emit(empty_profile_state());
      }else {
@@ -192,4 +194,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
 
+
+  Future<FutureOr<void>> get_exam_void(get_exam_event event, Emitter<MainState> emit) async {
+    await dio.get_data(url:"/index/exam",quary: {"subject":event.subject,"grade":event.grade}).then((value) {
+      print(event.subject);
+      print(event.grade);
+      print(value?.data);
+    });
+  }
 }

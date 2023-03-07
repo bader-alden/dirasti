@@ -99,11 +99,13 @@ class Profile extends HookWidget {
                     ),
                   )
                 else
+                  if(_tab_con.index==1)
                 Expanded(child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     itemBuilder: (context,index){
                   return course_item(context,index,context.read<MainBloc>().course_list[index]);
                 }, itemCount: context.read<MainBloc>().course_list.length))
+                else Container(color: Colors.red,width: 200,height: 200,)
               ],
             ),
           );
@@ -149,7 +151,7 @@ class Profile extends HookWidget {
                     child: Row(
                       children: [
                         Container(child: FilledButton(onPressed: (){
-                      //    Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(subject: model.,teacher: teacher,course: model,)));
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
                         }, child: Text("عرض نفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
                         Spacer(),
                       ],

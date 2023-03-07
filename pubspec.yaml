@@ -49,8 +49,9 @@ dependencies:
   fluttertoast:
   uuid:
   better_player:
-
-
+  time_picker_spinner_pop_up:
+  chips_choice_null_safety:
+  sqflite:
 dev_dependencies:
   flutter_test:
     sdk: flutter

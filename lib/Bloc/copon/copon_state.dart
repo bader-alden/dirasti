@@ -15,6 +15,7 @@ class scss extends CoponState {}
 class error extends CoponState {}
 class src_loading extends CoponState {}
 class add_loading extends CoponState {}
+class not_match_grade extends CoponState {}
 class change_state extends CoponState {
   final c ;
 

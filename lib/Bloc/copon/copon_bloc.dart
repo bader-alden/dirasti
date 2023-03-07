@@ -17,17 +17,21 @@ class CoponBloc extends Bloc<CoponEvent, CoponState> {
   }
   Future<FutureOr<void>> serch_copon_void(serch_copon_event event, Emitter<CoponState> emit) async {
     emit(src_loading());
-    await dio.get_data(url: "/copons",quary: {"uid_copon":event.copon}).then((value) {
+    await dio.get_data(url: "/copons",quary: {"uid_copon":event.copon,"grade":"0"}).then((value) {
       print(value?.data);
-      if(value?.data!="notfound"){
+      if(value?.data=="notfound"){
+        emit(not_found());
+      }else if (value?.data=="error10"){
+        emit(not_match_grade());
+      }
+        else{
+
         copon_module copon = copon_module.fromjson(value?.data[0]);
         if(copon.is_open!){
           emit(found(copon));
         }else{
           emit(not_open());
         }
-      }else{
-        emit(not_found());
       }
     });
   }

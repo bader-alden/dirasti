@@ -30,21 +30,17 @@ late BetterPlayerPlaylistConfiguration _betterPlayerPlaylistConfiguration;
 // List test_list_video = ["الاولى", "الثاتية", "الثالثة", "الرابعة", "الاولaى", "الثaاتية", "الثالaثة", "الaرابعة"];
 
 class CoursesDetails extends StatefulWidget {
-  const CoursesDetails({Key? key, required this.subject, required this.teacher, required this.course}) : super(key: key);
-  final subject_module subject;
-  final teacher_module teacher;
+  const CoursesDetails({Key? key, required this.course}) : super(key: key);
   final course_module course;
   @override
-  State<CoursesDetails> createState() => _CoursesDetailsState(subject, teacher, course);
+  State<CoursesDetails> createState() => _CoursesDetailsState( course);
 }
 
 class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStateMixin {
-  final subject_module subject;
-  final teacher_module teacher;
   final course_module course;
 
 
-  _CoursesDetailsState(this.subject, this.teacher, this.course) {
+  _CoursesDetailsState( this.course) {
     _betterPlayerConfiguration = BetterPlayerConfiguration(
       fit: BoxFit.cover,
       autoPlay: true,

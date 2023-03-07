@@ -35,6 +35,10 @@ class AddCourse extends StatelessWidget {
             is_serch_loading = false;
             Tost("غير موجود", Colors.red);
           }
+          if (state is not_match_grade) {
+            is_serch_loading = false;
+            Tost("هذا الكورس غير مخصص لصفك", Colors.red);
+          }
           if (state is not_open) {
             is_serch_loading = false;
             Tost("الكود المدخل تمت أستعماله", Colors.red);

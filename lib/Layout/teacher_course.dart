@@ -9,9 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../module/subject_module.dart';
 
 class TeacherCourse extends StatelessWidget {
-  const TeacherCourse({Key? key, required this.subject}) : super(key: key);
+  const TeacherCourse({Key? key, required this.subject, this.type}) : super(key: key);
   final subject_module subject;
-
+final type;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,7 +23,7 @@ class TeacherCourse extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             backgroundColor: white,
-            appBar: appbar_back("كورسات مادة " + subject.subject!),
+            appBar: appbar_back((type =="course"?"كورسات مادة ":"ملفات مادة ") + subject.subject!),
             body: Column(
               children: [
                 SizedBox(height: 30,),
@@ -45,7 +45,7 @@ class TeacherCourse extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: context.read<MainBloc>().teacher_list.length,
                       itemBuilder: (context, index) {
-                        return techer_course_list_item(context, index,context.read<MainBloc>().teacher_list[index],subject);
+                        return techer_course_list_item(context, index,context.read<MainBloc>().teacher_list[index],subject,type);
                       }),
                 ),
               ],
@@ -57,13 +57,17 @@ class TeacherCourse extends StatelessWidget {
   }
 }
 
-Widget techer_course_list_item(BuildContext context, int index,teacher_module model,subject) {
+Widget techer_course_list_item(BuildContext context, int index,teacher_module model,subject,type) {
   return Padding(
     padding: const EdgeInsets.all(8.0),
     child: InkWell(
       borderRadius: BorderRadius.circular(20),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AllCourse(subject: subject,teacher: model,)));
+        if(type == "course"){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AllCourse(subject: subject,teacher: model,)));
+        }else{
+
+        }
       },
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
