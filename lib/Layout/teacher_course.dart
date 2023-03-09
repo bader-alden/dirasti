@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../module/subject_module.dart';
+import 'all_file.dart';
 
 class TeacherCourse extends StatelessWidget {
   const TeacherCourse({Key? key, required this.subject, this.type}) : super(key: key);
@@ -66,7 +67,7 @@ Widget techer_course_list_item(BuildContext context, int index,teacher_module mo
         if(type == "course"){
           Navigator.push(context, MaterialPageRoute(builder: (context) => AllCourse(subject: subject,teacher: model,)));
         }else{
-
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AllFile(subject: subject,teacher: model,)));
         }
       },
       child: Card(

@@ -22,13 +22,13 @@ import 'dart:convert';
 import './utils/cache.dart';
 
 main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dio.init();
-  await cache.init();
-  // cache.remove_data("id");
-  if(cache.get_data("scode")==null){
-    cache.save_data("scode", Uuid().v4());
-  }
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await dio.init();
+  // await cache.init();
+  // // cache.remove_data("id");
+  // if(cache.get_data("scode")==null){
+  //   cache.save_data("scode", Uuid().v4());
+  // }
   runApp( App());
 }
 
@@ -44,68 +44,75 @@ class App extends StatelessWidget {
        return FutureBuilder(
          future:futer(),
          builder: (context,snapshot) {
-           // if (snapshot.connectionState == ConnectionState.waiting){
-           //   return Container(width: double.infinity,height: double.infinity,color: Color.fromARGB(255, 221, 221, 231),child: Image.asset("assets/sc.gif",fit: BoxFit.fitHeight,));
-           // }else {
+           if (snapshot.connectionState == ConnectionState.waiting) {
+             return Container(width: double.infinity,
+                 height: double.infinity,
+                 color: Color.fromARGB(255, 221, 221, 231),
+                 child: Image.asset("assets/sc.gif", fit: BoxFit.fitHeight,));
+           } else {
              return MaterialApp(
-             title: "دراستي",
-            theme: ThemeData(fontFamily: "cairo"),
-             useInheritedMediaQuery: true,
-              debugShowCheckedModeBanner: false,
-              home: cache.get_data("id")==null
-                  ?OnBoard()
-                  :MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (BuildContext context) => BottomNavBloc(),
-                  ),
-                ],
-                child: BlocBuilder<BottomNavBloc, BottomNavState>(
-                  builder: (context, state) {
-                    return Scaffold(
-                      //backgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
-                      bottomNavigationBar: CurvedNavigationBar(
-                        backgroundColor: Colors.transparent,
-                        color: Colors.transparent,
-                        index: context.select((BottomNavBloc bloc) => bloc.state.index),
-                        buttonBackgroundColor: orange,
-                        height: 65,
-                        items: [
-                          Icon(Icons.notifications_none, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 0 ? Colors.white : blue),
-                          Icon(Icons.qr_code_sharp, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 1 ? Colors.white : blue),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            // child: Icon(Icons.circle_outlined, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 2 ? Colors.white : blue),
-                             child: Image.asset("assets/clogo.png", height: 40, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 2 ? Colors.white : blue),
-                          ),
-                          Icon(Icons.calendar_month_rounded, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 3 ? Colors.white : blue),
-                          Icon(Icons.settings, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 4 ? Colors.white : blue),
-                        ],
-                        onTap: (index)  {
-                          context.read<BottomNavBloc>().change_index(index);
-                          home_page_con.jumpToPage(index);
-                        },
-                      ),
-                      body: PageView(
-                        onPageChanged: (index){
-                          context.read<BottomNavBloc>().change_index(index);
-                        },
-                        controller: home_page_con,
-                        children: [
-                          NotificationPage(),
-                          AddCourse(),
-                          HomePage(),
-                          Calendar(),
-                          Setting(),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            );
+               title: "دراستي",
+               theme: ThemeData(fontFamily: "cairo"),
+               useInheritedMediaQuery: true,
+               debugShowCheckedModeBanner: false,
+               home: cache.get_data("id") == null
+                   ? OnBoard()
+                   : MultiBlocProvider(
+                 providers: [
+                   BlocProvider(
+                     create: (BuildContext context) => BottomNavBloc(),
+                   ),
+                 ],
+                 child: BlocBuilder<BottomNavBloc, BottomNavState>(
+                   builder: (context, state) {
+                     return Scaffold(
+                       //backgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+                       bottomNavigationBar: CurvedNavigationBar(
+                         backgroundColor: Colors.transparent,
+                         color: Colors.transparent,
+                         index: context.select((BottomNavBloc bloc) => bloc.state.index),
+                         buttonBackgroundColor: orange,
+                         height: 65,
+                         items: [
+                           Icon(Icons.notifications_none, size: 30,
+                               color: context.select((BottomNavBloc bloc) => bloc.state.index) == 0 ? Colors.white : blue),
+                           Icon(Icons.qr_code_sharp, size: 30,
+                               color: context.select((BottomNavBloc bloc) => bloc.state.index) == 1 ? Colors.white : blue),
+                           Padding(
+                             padding: const EdgeInsets.all(4.0),
+                             // child: Icon(Icons.circle_outlined, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 2 ? Colors.white : blue),
+                             child: Image.asset("assets/clogo.png", height: 40,
+                                 color: context.select((BottomNavBloc bloc) => bloc.state.index) == 2 ? Colors.white : blue),
+                           ),
+                           Icon(Icons.calendar_month_rounded, size: 30,
+                               color: context.select((BottomNavBloc bloc) => bloc.state.index) == 3 ? Colors.white : blue),
+                           Icon(Icons.settings, size: 30, color: context.select((BottomNavBloc bloc) => bloc.state.index) == 4 ? Colors.white : blue),
+                         ],
+                         onTap: (index) {
+                           context.read<BottomNavBloc>().change_index(index);
+                           home_page_con.jumpToPage(index);
+                         },
+                       ),
+                       body: PageView(
+                         onPageChanged: (index) {
+                           context.read<BottomNavBloc>().change_index(index);
+                         },
+                         controller: home_page_con,
+                         children: [
+                           NotificationPage(),
+                           AddCourse(),
+                           HomePage(),
+                           Calendar(),
+                           Setting(),
+                         ],
+                       ),
+                     );
+                   },
+                 ),
+               ),
+             );
            }
-
+         }
        );
       },
 

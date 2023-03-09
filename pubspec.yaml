@@ -52,6 +52,8 @@ dependencies:
   time_picker_spinner_pop_up:
   chips_choice_null_safety:
   sqflite:
+  syncfusion_flutter_pdfviewer:
+  slide_countdown:
 dev_dependencies:
   flutter_test:
     sdk: flutter

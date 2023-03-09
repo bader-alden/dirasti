@@ -43,3 +43,18 @@ class get_exam_event extends MainEvent{
   get_exam_event(this.grade, this.subject);
 
 }
+class get_file_event extends MainEvent{
+  final subject;
+  final grade;
+  final teacher;
+
+  get_file_event( this.grade, this.subject, this.teacher);
+}
+class get_file_details_event extends MainEvent{
+  final subject;
+  final grade;
+  final teacher;
+  final file;
+
+  get_file_details_event( this.grade, this.subject, this.teacher,this.file);
+}

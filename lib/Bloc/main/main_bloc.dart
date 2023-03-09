@@ -22,8 +22,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<get_teatcher_event>(get_teatcher_void);
     on<get_course_event>(get_course_void);
     on<get_course_details_event>(get_course_details_void);
+    on<get_file_details_event>(get_file_details_void);
     on<watch_event>(watch_void);
     on<get_exam_event>(get_exam_void);
+    on<get_file_event>(get_file_void);
   }
   user_module? user_model;
   List<subject_module> subject_list=[];
@@ -31,6 +33,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   List<course_module> course_list=[];
   List<part_module> part_list=[];
   List<String> part_tab_list=[];
+  List<Map> all_file_list=[];
+  List<Map<String,dynamic>> all_exam_list=[];
   int porfile_tab_index=1;
   Future<FutureOr<void>> init_void(init event, Emitter<MainState> emit) async {
     try{
@@ -122,7 +126,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           value?.data.forEach((e){
             part_list.add(part_module.fromjson(e));
           });
-
+          emit(sub_state());
         }
         // value?.data.forEach((e){
         // //  course_list.add(course_module.fromjson(e));
@@ -140,7 +144,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         part_tab_list.add(element.name!);
       });
 
-      emit(sub_state());
+
      // emit(course_state());
     }
 
@@ -193,13 +197,86 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     emit(profile_tab_state());
   }
 
-
-
   Future<FutureOr<void>> get_exam_void(get_exam_event event, Emitter<MainState> emit) async {
     await dio.get_data(url:"/index/exam",quary: {"subject":event.subject,"grade":event.grade}).then((value) {
-      print(event.subject);
-      print(event.grade);
-      print(value?.data);
+      all_exam_list.clear();
+      value?.data.forEach((element){
+        all_exam_list.add(element);
+        if(all_exam_list.length == value.data.indexOf(element)+1){
+          emit(get_exam_state());
+        }
+      });
     });
   }
+
+  Future<FutureOr<void>> get_file_void(get_file_event event, Emitter<MainState> emit) async {
+    try{
+      await dio.get_data(url:"/index/file",quary: {
+        "subject":event.subject,
+        "grade":event.grade,
+        "teacher_name":event.teacher,
+      }).then((value) {
+        print(value?.data);
+        all_file_list.clear();
+        // print(value?.data);
+        // print(event.subject);
+        // print(event.grade);
+        // print(event.teacher);
+        value?.data.forEach((e){
+          // course_list.add(course_module.fromjson(e));
+          // teacher_list.add(teacher_module.fromjson(e));
+          all_file_list.add(e);
+        });
+
+      });
+    }catch(e){
+
+    }finally{
+      emit(course_state());
+    }
+  }
+
+  Future<FutureOr<void>> get_file_details_void(get_file_details_event event, Emitter<MainState> emit) async {
+    try{
+      await dio.get_data(url:"/index/my_file",quary: {
+        "subject":event.subject,
+        "grade":event.grade,
+        "teacher_name":event.teacher,
+        "file":event.file,
+        "user_id":cache.get_data("id"),
+        "is_course":0,
+      }).then((value) {
+         print(value?.data);
+        if(value?.data=="notfound"){
+          emit(not_sub_file_state());
+          print("okada");
+        }else {
+          // value?.data.forEach((e){
+          //   part_list.add(part_module.fromjson(e));
+          // });
+          emit(get_file_link_state(value?.data[0]["link"]));
+        }
+
+        // value?.data.forEach((e){
+        // //  course_list.add(course_module.fromjson(e));
+        //   // teacher_list.add(teacher_module.fromjson(e));
+        // });
+
+      });
+    }catch(e){
+      print(e);
+    }finally{
+      // print(part_list[0].name);
+      // print(part_list[0].part?[0].name);
+      // print(part_list[0].part?[0].res);
+      // part_list.forEach((element) {
+      //   part_tab_list.add(element.name!);
+      // });
+
+     // emit(sub_state());
+      // emit(course_state());
+    }
+  }
+
+
 }

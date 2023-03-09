@@ -37,9 +37,9 @@ class Subject_type extends StatelessWidget {
                 SizedBox(height: 0,),
             Expanded(child: Column(
               children: [
-                _subject_type_list_item("الكورسات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"course" )))),
-                _subject_type_list_item("الورقيات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"file" )))),
-                _subject_type_list_item("الإختبارات",()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,)))),
+                _subject_type_list_item("الكورسات",0,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"course" )))),
+                _subject_type_list_item("الورقيات",1,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"file" )))),
+                _subject_type_list_item("الإختبارات",2,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,)))),
               ],
             )),
                 SizedBox(height: 30,),
@@ -51,7 +51,7 @@ class Subject_type extends StatelessWidget {
   }
 }
 
-Widget _subject_type_list_item (String text,Function() ontap){
+Widget _subject_type_list_item (String text,index,Function() ontap){
   return Expanded(child: Padding(
     padding: EdgeInsets.all(10),
     child: InkWell(
@@ -66,7 +66,9 @@ Widget _subject_type_list_item (String text,Function() ontap){
             Spacer(),
             Text(text,style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
             SizedBox(width: 50,),
-            CircleAvatar(backgroundColor: blue,radius: 25,child: Image.asset("assets/img.png",height: 30,),),
+            if(index == 0)CircleAvatar(backgroundColor: blue,radius: 25,child: Image.asset("assets/img.png",height: 30,),),
+            if(index == 1)CircleAvatar(backgroundColor: blue,radius: 25,child: Image.asset("assets/file.png",height: 30,),),
+            if(index == 2)CircleAvatar(backgroundColor: blue,radius: 25,child: Image.asset("assets/exam.png",height: 30,),),
             SizedBox(width: 30),
           ],
         )),
