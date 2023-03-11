@@ -53,30 +53,30 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
       ),
       body: Column(
         children: [
-          SizedBox(height: 10,),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              decoration: BoxDecoration(color: Colors.grey.shade300,borderRadius: BorderRadius.circular(15)),
-              height: 50,
-              child: TabBar(
-                controller: _tab_con,
-                tabs: [
-                  Text('كل الإشعارات', style: TextStyle(color: _tab_con?.index == 0 ?Colors.white:Colors.black,fontSize: 22)),
-                  Text('الأحدث', style: TextStyle(color: _tab_con?.index == 1 ?Colors.white:Colors.black,fontSize: 22)),
-                ],
-                indicator: ContainerTabIndicator(
-                  color: blue,
-                  radius: BorderRadius.circular(10.0),
-                  //  padding: const EdgeInsets.symmetric(horizontal: 20),
-                ),
-                onTap: (index){
-                  setState((){});
-                 // page_con?.animateToPage(index,duration: Duration(milliseconds: 300), curve: Curves.linear);
-                },
-              ),
-            ),
-          ),
+          // SizedBox(height: 10,),
+          // Padding(
+          //   padding: const EdgeInsets.all(15.0),
+          //   child: Container(
+          //     decoration: BoxDecoration(color: Colors.grey.shade300,borderRadius: BorderRadius.circular(15)),
+          //     height: 50,
+          //     child: TabBar(
+          //       controller: _tab_con,
+          //       tabs: [
+          //         Text('كل الإشعارات', style: TextStyle(color: _tab_con?.index == 0 ?Colors.white:Colors.black,fontSize: 22)),
+          //         Text('الأحدث', style: TextStyle(color: _tab_con?.index == 1 ?Colors.white:Colors.black,fontSize: 22)),
+          //       ],
+          //       indicator: ContainerTabIndicator(
+          //         color: blue,
+          //         radius: BorderRadius.circular(10.0),
+          //         //  padding: const EdgeInsets.symmetric(horizontal: 20),
+          //       ),
+          //       onTap: (index){
+          //         setState((){});
+          //        // page_con?.animateToPage(index,duration: Duration(milliseconds: 300), curve: Curves.linear);
+          //       },
+          //     ),
+          //   ),
+          // ),
           SizedBox(height: 30,),
           Expanded(
             child: ListView.separated(

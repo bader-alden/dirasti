@@ -74,6 +74,12 @@ final teacher_module teacher;
                   SizedBox(height: 10,),
                   Text(model.name??"اسم الكورس",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
                   SizedBox(height: 5),
+                  if( model.price=="0")
+                    Text(
+                      "كورس مجاني",
+                      style: TextStyle(color: orange,fontSize: 18),
+                    )
+                  else
                   Text("السعر "+model.price!,style: TextStyle(color: orange,fontSize: 18)),
                   SizedBox(height: 5,),
                   Row(

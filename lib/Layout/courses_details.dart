@@ -44,8 +44,8 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
     _betterPlayerConfiguration = BetterPlayerConfiguration(
       fit: BoxFit.cover,
       autoPlay: true,
+      looping: false,
       showPlaceholderUntilPlay: true,
-      subtitlesConfiguration: BetterPlayerSubtitlesConfiguration(fontSize: 10),
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -101,9 +101,8 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
               });
             }
             if (state is sub_state) {
-              video_tab_con = TabController(length: context.read<MainBloc>().part_list.length, vsync: this, initialIndex: context.read<MainBloc>().part_list.length - 1);
+              video_tab_con = TabController(length: context.read<MainBloc>().part_list.length, vsync: this, initialIndex: 0);
               setState(() {
-                print("okkkkkkkkk");
                 not_buy = false;
               });
             }
@@ -118,7 +117,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
                   ),
                   if(is_video_play)
             FutureBuilder<List<BetterPlayerDataSource>>(
-              future: setupData(context,part),
+              future: setupData(context),
               builder: (context,snapshot) {
                 if(snapshot.connectionState == ConnectionState.waiting||snapshot.data==null){
                   return CircularProgressIndicator();
@@ -209,16 +208,19 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
     );
   }
 
-  Future<List<BetterPlayerDataSource>> setupData(BuildContext context,index) async {
-    context.read<MainBloc>().part_list[index].part?.forEach((element) {
-      print(element.res!.values.first);
-      _dataSourceList.add(
-        BetterPlayerDataSource(
-            BetterPlayerDataSourceType.network, element.res!.values.first
-          // ,resolutions: element.res
-        ),
-      );
-    });
+  Future<List<BetterPlayerDataSource>> setupData(BuildContext context) async {
+    for(int i =0; i<context.read<MainBloc>().part_list.length;i++){
+      context.read<MainBloc>().part_list[i].part?.forEach((element) {
+        print(element.res!.values.first);
+        _dataSourceList.add(
+          BetterPlayerDataSource(
+              BetterPlayerDataSourceType.network, element.res!.values.first
+            // ,resolutions: element.res
+          ),
+        );
+      });
+    }
+
 
     // _dataSourceList.add(
     //   BetterPlayerDataSource(
@@ -257,6 +259,12 @@ Widget course_details_page_1(context, course_module course, state) {
             children: [
               Row(
                 children: [
+                  if( course.price=="0")
+                  Text(
+                   "كورس مجاني",
+                    style: TextStyle(fontSize: 22, color: orange, fontWeight: FontWeight.bold),
+                  )
+                  else
                   Text(
                     "السعر " + course.price!,
                     style: TextStyle(fontSize: 22, color: orange, fontWeight: FontWeight.bold),
@@ -358,38 +366,41 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
         SizedBox(
           height: 10,
         ),
-        TabBar(
-          isScrollable: true,
-          padding: EdgeInsets.zero,
-          indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
-          labelPadding: EdgeInsets.zero,
-          controller: video_tab_con,
-          tabs: context.read<MainBloc>().part_tab_list
-              .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Container(
-                      width: 80,
-                      decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
-                      padding: EdgeInsets.all(4),
-                      child: Center(
-                          child: Text(e,
-                              style: TextStyle(
-                                  color: video_tab_con?.index == context.read<MainBloc>().part_tab_list.toList().indexOf(e) ? Colors.white : Colors.black,
-                                  fontSize: 15)))),
-                ),
-              )
-              .toList(),
-          indicator: ContainerTabIndicator(
-            color: blue,
+        Directionality(
+          textDirection: TextDirection.rtl,
+          child: TabBar(
+            isScrollable: true,
             padding: EdgeInsets.zero,
-            radius: BorderRadius.circular(12.0),
-            //  padding: const EdgeInsets.symmetric(horizontal: 20),
-          ),
-          onTap: (index) {
+            indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
+            labelPadding: EdgeInsets.zero,
+            controller: video_tab_con,
+            tabs: context.read<MainBloc>().part_tab_list
+                .map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Container(
+                        width: 80,
+                        decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
+                        padding: EdgeInsets.all(4),
+                        child: Center(
+                            child: Text(e,
+                                style: TextStyle(
+                                    color: video_tab_con?.index == context.read<MainBloc>().part_tab_list.toList().indexOf(e) ? Colors.white : Colors.black,
+                                    fontSize: 15)))),
+                  ),
+                )
+                .toList(),
+            indicator: ContainerTabIndicator(
+              color: blue,
+              padding: EdgeInsets.zero,
+              radius: BorderRadius.circular(12.0),
+              //  padding: const EdgeInsets.symmetric(horizontal: 20),
+            ),
+            onTap: (index) {
 
-            setstate(() {});
-          },
+              setstate(() {});
+            },
+          ),
         ),
         SizedBox(
           height: 20,
@@ -412,6 +423,18 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
 }
 
 Widget tab_part_item(BuildContext context, int index,part_detail_module model,setstate) {
+  _betterPlayerPlaylistController?.betterPlayerController?.addEventsListener((p0) {
+    if(_betterPlayerPlaylistController?.betterPlayerController?.isBuffering()??false){
+      _betterPlayerPlaylistController?.betterPlayerController?.videoPlayerController?.position.then((value) {
+        if(value!.inSeconds == 0){
+          setstate((){});
+
+        }
+      });
+    }
+  });
+
+
   return InkWell(
     borderRadius: BorderRadius.circular(10),
     onTap: () {
@@ -423,9 +446,12 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
         }else {
           _betterPlayerPlaylistController?.betterPlayerController?.play();
         }
+        setstate((){});
       }
       else if(video_tab_con?.index!=part&& is_video_play){
-        Tost("change tab", Colors.red);
+       // Tost("change tab", Colors.red);
+        _betterPlayerPlaylistController?.setupDataSource(context.read<MainBloc>().video_index_map[video_tab_con?.index]![index]);
+        setstate((){});
       }
       else if(is_video_play){
         print(index);
@@ -440,7 +466,6 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
         // setstate((){});
         //     context.read<MainBloc>().add(watch_event(video_tab_con?.index));
       }
-
     },
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -448,7 +473,10 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Icon((_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index ?Icons.pause :Icons.play_arrow_rounded, size: 50),
+            Icon( context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index &&
+                context.read<MainBloc>().video_index_map[video_tab_con?.index]!.contains(_betterPlayerPlaylistController?.currentDataSourceIndex) &&
+                (_betterPlayerPlaylistController!.betterPlayerController!.isPlaying()!||_betterPlayerPlaylistController!.betterPlayerController!.isBuffering()!)
+                ?Icons.pause :Icons.play_arrow_rounded, size: 50),
             Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -467,7 +495,13 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
             // SizedBox(height: 75,width: 75,child: Placeholder(),)
             //  SizedBox(height: 75,width: 75,child: Center(child: Text((index+1).toString(),style: TextStyle(fontSize: 30),)),)
             Container(
-              decoration: BoxDecoration(color: (_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index ? orange : blue, borderRadius: BorderRadius.circular(15)),
+              decoration: BoxDecoration(color:
+
+              context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index
+                  &&
+                  context.read<MainBloc>().video_index_map[video_tab_con?.index]!.contains(_betterPlayerPlaylistController?.currentDataSourceIndex)
+
+                  ? orange : blue, borderRadius: BorderRadius.circular(15)),
               height: 75,
               width: 75,
               child: Center(

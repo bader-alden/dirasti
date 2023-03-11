@@ -58,3 +58,10 @@ class get_file_details_event extends MainEvent{
 
   get_file_details_event( this.grade, this.subject, this.teacher,this.file);
 }
+
+class search_event extends MainEvent{
+  final query;
+
+
+  search_event(this.query);
+}

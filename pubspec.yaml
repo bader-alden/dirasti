@@ -54,6 +54,9 @@ dependencies:
   sqflite:
   syncfusion_flutter_pdfviewer:
   slide_countdown:
+  share_plus:
+  map_launcher:
+  url_launcher:
 dev_dependencies:
   flutter_test:
     sdk: flutter

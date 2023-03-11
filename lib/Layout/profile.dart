@@ -1,13 +1,16 @@
 import 'package:container_tab_indicator/container_tab_indicator.dart';
+import 'package:dirasti/Layout/pdf.dart';
 import 'package:dirasti/Layout/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../Bloc/main/main_bloc.dart';
+import '../main.dart';
 import '../module/course_module.dart';
 import '../utils/const.dart';
 import 'courses_details.dart';
+int v =75;
 
 class Profile extends HookWidget {
   const Profile(this.user_name, {Key? key}) : super(key: key);
@@ -21,6 +24,7 @@ class Profile extends HookWidget {
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {},
         builder: (context, state) {
+          var bloc_providor = context.read<MainBloc>();
           return Scaffold(
             appBar: appbar_back("الملف الشخصي"),
             body: Column(
@@ -105,7 +109,11 @@ class Profile extends HookWidget {
                     itemBuilder: (context,index){
                   return course_item(context,index,context.read<MainBloc>().course_list[index]);
                 }, itemCount: context.read<MainBloc>().course_list.length))
-                else Container(color: Colors.red,width: 200,height: 200,)
+                else  Expanded(child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context,index){
+                        return _file_item(context,index,bloc_providor,context.read<MainBloc>().my_file_list[index]);
+                      }, itemCount: context.read<MainBloc>().my_file_list.length))
               ],
             ),
           );
@@ -113,6 +121,8 @@ class Profile extends HookWidget {
       ),
     );
   }
+
+
   Widget course_item(BuildContext context, int index, course_module model) {
     return Card(
       child: SizedBox(
@@ -129,8 +139,8 @@ class Profile extends HookWidget {
                   SizedBox(height: 10,),
                   Text(model.name??"اسم الكورس",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
                   SizedBox(height: 5),
-                  Text("السعر "+model.price!,style: TextStyle(color: orange,fontSize: 18)),
-                  SizedBox(height: 5,),
+                  // Text("السعر "+model.price!,style: TextStyle(color: orange,fontSize: 18)),
+                  // SizedBox(height: 5,),
                   Row(
                     children: [
                       Text(" ساعة "),
@@ -169,4 +179,116 @@ class Profile extends HookWidget {
       ),
     );
   }
+  Widget _file_item(BuildContext context, int index, MainBloc bloc_provider, Map model) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () async {
+          showDialog(
+              useSafeArea: false,
+              context: context, builder: (context)=>WillPopScope(
+            onWillPop: () async {
+              v = 75;
+              bloc_provider.emit(get_exam_state());
+              return await true;
+            },
+            child: BlocProvider.value(
+              value: bloc_provider,
+              child: BlocConsumer<MainBloc, MainState>(
+                listener: (context, state) async {
+                  if(state is not_sub_file_state){
+                    v=250;
+                    print("okkkkkkkkk");
+                  }
+                  if(state is get_file_link_state){
+                    v=75;
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Pdf(title: model["name"],link: state.link,)));
+                  }
+                },
+                builder: (context, state) {
+                  return Center(
+                    child: AnimatedContainer(
+                        duration: Duration(milliseconds: 200),
+                        height: v.toDouble(),
+                        width: v.toDouble(),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(color:Colors.white,borderRadius: BorderRadius.circular(10)),
+                        child: state is not_sub_file_state ?
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Spacer(),
+                              Text("لم تقم بشراء الكورس ",style: TextStyle(color: Colors.black,fontSize: 22),),
+                              Spacer(),
+                              Expanded(
+                                child: Material(
+                                  child: InkWell(
+                                    onTap: (){
+                                      v = 75;
+                                      bloc_provider.emit(get_exam_state());
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      home_page_con.jumpToPage(1);
+                                    },
+                                    child: Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration( color: orange,borderRadius: BorderRadius.circular(10)),
+                                      child: Center(child: Text("شراء",style: TextStyle(color: Colors.black,fontSize: 22),)),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                            :CircularProgressIndicator(color:blue,)),
+                  );
+                },
+              ),
+            ),
+          ));
+          context.read<MainBloc>().add(get_file_details_event(model['grade'], model['subject'],model['teacher_name'], 1));
+        },
+        child: Card(child: SizedBox(
+          height: 100,
+          child: Stack(
+            children: [
+              // Padding(
+              //   padding: const EdgeInsets.all(20.0),
+              //   child: Text("5000"+" ل.س ",style: TextStyle(color: orange,fontSize:18,fontWeight: FontWeight.bold),textDirection: TextDirection.rtl,),
+              // ),
+
+              Row(
+                children: [
+
+                  // Center(
+                  //   child: Container(padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                  //       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: blue),
+                  //       child: Text("ابدأ", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)),
+                  // ),
+                  Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(model["name"]??"اسم الاختبار", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                      Text(model["des"]??"30 دقيقة",style: TextStyle(fontSize: 12),)
+                    ],
+                  ),
+                  SizedBox(width: 10,),
+                  Image.asset("assets/file.png", height: 50,),
+                  SizedBox(width: 20,),
+                ],
+              ),
+            ],
+          ),
+        ),),
+      ),
+    );
+  }
+
 }

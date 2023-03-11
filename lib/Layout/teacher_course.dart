@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../module/subject_module.dart';
 import 'all_file.dart';
-
+var _teacher_con = TextEditingController();
 class TeacherCourse extends StatelessWidget {
   const TeacherCourse({Key? key, required this.subject, this.type}) : super(key: key);
   final subject_module subject;
@@ -22,6 +22,7 @@ final type;
 
         },
         builder: (context, state) {
+          print(context.read<MainBloc>().teacher_list);
           return Scaffold(
             backgroundColor: white,
             appBar: appbar_back((type =="course"?"كورسات مادة ":"ملفات مادة ") + subject.subject!),
@@ -34,7 +35,13 @@ final type;
                     children: [
                       Expanded(child: TextFormField(
                         textDirection: TextDirection.rtl,
-                        decoration: InputDecoration(hintText: "بحث...", hintTextDirection: TextDirection.rtl, border: InputBorder.none),)),
+                        controller: _teacher_con,
+                        decoration: InputDecoration(hintText: "بحث...", hintTextDirection: TextDirection.rtl, border: InputBorder.none),
+                      onChanged: (value){
+                          context.read<MainBloc>().restore_list();
+                          context.read<MainBloc>().add(search_event(value));
+                      },
+                      )),
                       SizedBox(width: 20,),
                       Icon(Icons.search),
                       SizedBox(width: 20,),

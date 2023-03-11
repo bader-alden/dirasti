@@ -26,6 +26,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<watch_event>(watch_void);
     on<get_exam_event>(get_exam_void);
     on<get_file_event>(get_file_void);
+    on<search_event>(search_void);
   }
   user_module? user_model;
   List<subject_module> subject_list=[];
@@ -76,6 +77,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         print(value?.data);
         value?.data.forEach((e){
           teacher_list.add(teacher_module.fromjson(e));
+          sec_teacher_list.add(teacher_module.fromjson(e));
         });
 
       });
@@ -108,6 +110,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
+  Map<int,List<int>> video_index_map  = {};
+
   Future<FutureOr<void>> get_course_details_void(get_course_details_event event, Emitter<MainState> emit) async {
     print("start");
     try{
@@ -119,6 +123,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "user_id":cache.get_data("id"),
         "is_course":1,
       }).then((value) {
+        video_index_map.clear();
+        part_list.clear();
+        part_tab_list.clear();
+        int ind = 0;
        // print(value?.data);
         if(value?.data=="notfound"){
           emit(not_sub_state());
@@ -126,6 +134,21 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           value?.data.forEach((e){
             part_list.add(part_module.fromjson(e));
           });
+          // part_list = part_list.reversed.toList();
+          part_list.forEach((element) {
+
+            part_tab_list.add(element.name!);
+            element.part?.forEach((element2) {
+              print(element.name! +"    " + element2.name!);
+              print(ind);
+              if(video_index_map[part_list.indexOf(element)] == null){
+                video_index_map[part_list.indexOf(element)]=[];
+              }
+             // video_index_map[part_list.indexOf(element)]=[];
+              video_index_map[part_list.indexOf(element)]?.add(ind++);
+            });
+          });
+          print(video_index_map);
           emit(sub_state());
         }
         // value?.data.forEach((e){
@@ -140,9 +163,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       // print(part_list[0].name);
       // print(part_list[0].part?[0].name);
      // print(part_list[0].part?[0].res);
-      part_list.forEach((element) {
-        part_tab_list.add(element.name!);
-      });
+
 
 
      // emit(course_state());
@@ -173,18 +194,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }
     });
   }
-
+  List<Map> my_file_list=[];
   Future<FutureOr<void>> init_porfile2_void(init_porfile2 event, Emitter<MainState> emit) async {
     course_list.clear();
+    my_file_list.clear();
     emit(loading_porfile_state());
    await dio.get_data(url: "/index/my_course",quary: {"user_id":cache.get_data("id"),"is_course":event.type}).then((value) {
      print(value?.data);
-     if(value?.data[0].length==0){
+     if(value?.data =='notfound10'||value?.data[0].length==0 || value?.data ==' '){
        emit(empty_profile_state());
      }else {
        value?.data[0].forEach((e){
-       course_list.add(course_module.fromjson(e));
-       if(value.data[0].indexOf(e)+1 == course_list.length){
+         if(event.type == 1) {
+           course_list.add(course_module.fromjson(e));
+         }else{
+           my_file_list.add(e);
+          print("fileeeee");
+         }
+       if(value.data[0].indexOf(e)+1 == course_list.length ||value.data[0].indexOf(e)+1 == my_file_list.length){
          emit(init_porfile_state());
        }
      });
@@ -278,5 +305,27 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }
   }
 
+  List<teacher_module> serarch_list= [];
+  List<teacher_module> sec_teacher_list= [];
 
+
+  FutureOr<void> search_void(search_event event, Emitter<MainState> emit) {
+     serarch_list = teacher_list;
+
+    final suge = serarch_list.where((element) {
+      final title = element.teacher_name!.toLowerCase();
+      final input = event.query.toLowerCase();
+      print(event.query);
+      print(element.teacher_name);
+
+      return title.contains(input);
+    }).toList();
+
+    teacher_list = suge;
+    emit(serch_state());
+  }
+  void restore_list(){
+    teacher_list = sec_teacher_list;
+    emit(serch_state());
+  }
 }

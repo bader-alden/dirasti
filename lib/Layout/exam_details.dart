@@ -71,9 +71,19 @@ final exam_name;
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          "السؤال " + (index + 1).toString() + " : ", textDirection: TextDirection.rtl,
-                                          style: TextStyle(fontSize: 18),),
+                                        Row(
+                                          children: [
+                                            Spacer(),
+                                            if(context.read<ExamBloc>().wrong_answer[index] !=null)
+                                              Icon(Icons.close,color: Colors.red,size: 50,)
+                                            else if (context.read<ExamBloc>().correct_answer[index] !=null)
+                                              Icon(Icons.check,color: Colors.green,size: 50),
+                                            Spacer(),
+                                            Text(
+                                              "السؤال " + (index + 1).toString() + " : ", textDirection: TextDirection.rtl,
+                                              style: TextStyle(fontSize: 18),),
+                                          ],
+                                        ),
                                         Text(context.read<ExamBloc>().all_q[index].question!, textDirection: TextDirection.rtl,style: TextStyle(fontSize: 18),),
                                         SizedBox(height: 5,),
                                         Row(
@@ -115,9 +125,6 @@ final exam_name;
                                             SizedBox(width: 5,),
                                           ],
                                         ),
-
-
-
                                         SizedBox(height: 20,),
                                         Row(
                                           children: [
