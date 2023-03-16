@@ -57,6 +57,7 @@ class AddCourse extends StatelessWidget {
             is_add_loading=false;
             Tost("تم تفعيل الكورس بنجاح", Colors.green);
             text_con1.clear();
+            copon_serch = null;
             text_con2.clear();
             text_con3.clear();
           }

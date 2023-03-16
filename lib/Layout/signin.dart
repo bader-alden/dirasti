@@ -48,9 +48,6 @@ class Signin extends StatelessWidget {
             is_loadin = false;
             Tost(state.error, Colors.red);
           }
-          if (state is init_state &&type!="edit") {
-            _grade = state.id[0];
-          }
           if(state is scss_update_state){
             Tost("تم التعديل بنجاح", Colors.green);
             Navigator.pop(context);
@@ -195,14 +192,13 @@ class Signin extends StatelessWidget {
                                   child: Directionality(
                                     textDirection: TextDirection.rtl,
                                     child: DropdownButton(
-                                      items: context.read<UserBloc>().grade_modules_string.map(drop_item).toList(),
+                                      items: context.read<UserBloc>().grade_modules.map((e)=>DropdownMenuItem(child: Text(e.name!, textDirection: TextDirection.rtl),value: e.id,)).toList(),
                                       onChanged: (value) {
                                         setstatea(() {
-                                          _grade =
-                                              context.read<UserBloc>().grade_modules_id[context.read<UserBloc>().grade_modules_string.indexOf(value)];
+                                          _grade =value.toString();
                                         });
                                       },
-                                      value: context.read<UserBloc>().grade_modules_string[int.parse(_grade) - 1],
+                                      value: _grade,
                                       isExpanded: true,
                                       alignment: Alignment.centerRight,
                                       underline: Text(""),

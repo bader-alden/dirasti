@@ -6,6 +6,8 @@ class course_module{
   String? photo;
   String? grade;
   String? price;
+  String? banner;
+  String? des;
   String? part;
   String? number_hours;
   String? is_course;
@@ -14,7 +16,9 @@ class course_module{
     name = json['name'];
     id = json['id'].toString();
     subject = json['subject'].toString();
+    banner = json['banner'].toString();
     photo = json['photo'].toString();
+    des = json['des'].toString();
     grade = json['grade'].toString();
     price = json['price'].toString();
     part = json['part'].toString();

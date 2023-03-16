@@ -5,4 +5,11 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <application>
+        android:exported="true"
+    <activity
+        android:exported="true"
+        android:name=".MainActivity">
+    </activity>
+    </application>
 </manifest>

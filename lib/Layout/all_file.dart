@@ -30,7 +30,7 @@ class AllFile extends StatelessWidget {
             body: Column(
               children: [
                 SizedBox(height: 30,),
-                banner_widget(),
+                banner_widget(subject.file_banner!),
                 SizedBox(height: 20),
                 // if(context.read<MainBloc>().all_exam_list.isEmpty)
                 //   Expanded(child: Center(child: CircularProgressIndicator(),))

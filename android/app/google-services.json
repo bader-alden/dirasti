@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "842227683152",
+    "project_id": "dirasti-d3528",
+    "storage_bucket": "dirasti-d3528.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842227683152:android:a92d460a6d2b17f7c9a655",
+        "android_client_info": {
+          "package_name": "com.dirasti.dirasti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "842227683152-6cr0idjc55db78f1fernsuaua06k8jkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzy4f39YN-Od74PNURY_y76HKxzUO6FuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "842227683152-6cr0idjc55db78f1fernsuaua06k8jkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

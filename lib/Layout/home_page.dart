@@ -17,9 +17,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
   create: (context) => MainBloc()..add(init()),
   child: BlocConsumer<MainBloc, MainState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
+  listener: (context, state) {},
   builder: (context, state) {
     return Container(
       color:  Color.fromRGBO(250, 250, 250, 1.0),
@@ -50,7 +48,7 @@ class HomePage extends StatelessWidget {
             ],
             ),
             SizedBox(height: 30,),
-            banner_widget(),
+            banner_widget("https://ubiquitous-sepia-rainforest.glitch.me/file/4f00f8ff-323c-44cc-8e2e-f67b359c81e4.png"),
             SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -64,7 +62,10 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 30,),
             Expanded(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
-              child: GridView.builder(
+              child: context.read<MainBloc>().subject_list.length == 0 ?
+                  Center(child: CircularProgressIndicator(color: blue,))
+                  :GridView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: context.read<MainBloc>().subject_list.length,
                   // physics: BouncingScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 27,mainAxisSpacing: 27),
@@ -93,7 +94,7 @@ home_page_grade_item(BuildContext context, int index,subject_module model) {
     child: InkWell(
       onTap: (){
        // context.read<BottomNavBloc>().emit(BottomNavState(1));
-        Navigator.push(context, PageRouteBuilder(transitionDuration: Duration(milliseconds: 700),pageBuilder: (_,__,___)=>Subject_type(hero: index.toString(),subject:model)));
+        Navigator.push(context, PageRouteBuilder(transitionDuration: Duration(milliseconds: 400),pageBuilder: (_,__,___)=>Subject_type(hero: index.toString(),subject:model)));
       },
       child: Hero(
         tag: index.toString(),
@@ -103,7 +104,7 @@ home_page_grade_item(BuildContext context, int index,subject_module model) {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/"+model!.subject!+".png",height: 65,),
+              Image.network(model!.photo!,height: 65,),
               //Icon(Icons.bolt_outlined,size: 50,),
               SizedBox(height: 20,),
               Text(model!.subject!)

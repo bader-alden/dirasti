@@ -133,7 +133,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
               }
             )
                     else
-                  banner_widget(),
+                  banner_widget(course.banner!),
                   SizedBox(
                     height: 30,
                   ),
@@ -288,7 +288,7 @@ Widget course_details_page_1(context, course_module course, state) {
                   ),
                 ],
               ),
-              Text("data" * 200, textDirection: TextDirection.rtl),
+              Text(course.des??"", textDirection: TextDirection.rtl),
             ],
           ),
         ),

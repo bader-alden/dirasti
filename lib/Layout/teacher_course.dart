@@ -93,7 +93,7 @@ Widget techer_course_list_item(BuildContext context, int index,teacher_module mo
                 ],
               ),
               SizedBox(width: 20),
-              SizedBox(height: 100, width: 100, child: Placeholder(),),
+              SizedBox(height: 100, width: 100, child: Image.network(model.photo!),),
               SizedBox(width: 20),
             ],
           ),

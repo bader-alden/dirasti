@@ -153,7 +153,7 @@ class Profile extends HookWidget {
                     ],
                   ),
                   SizedBox(height: 10,),
-                  SizedBox(width: MediaQuery.of(context).size.width-200,child: Text("نفاصيلx "*10,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
+                  SizedBox(width: MediaQuery.of(context).size.width-200,child: Text(model.des!,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
                   Spacer(),
                   SizedBox(
                     height: 40,
@@ -172,7 +172,7 @@ class Profile extends HookWidget {
               ),
             ),
             SizedBox(width: 20,),
-            SizedBox(height:280,width:150,child:Image.asset("assets/img_1.png",height: 280,fit: BoxFit.fitHeight,)),
+            SizedBox(height:280,width:150,child:Image.network(model.photo!,height: 280,fit: BoxFit.fitHeight,)),
 
           ],
         ),

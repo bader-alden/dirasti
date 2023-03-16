@@ -23,7 +23,7 @@ class Subject_type extends StatelessWidget {
             body: Column(
               children: [
                   SizedBox(height: 30,),
-                  banner_widget(),
+                  banner_widget(subject.type_banner!),
                   SizedBox(height: 30,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

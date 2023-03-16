@@ -22,11 +22,6 @@ class error_signin extends UserState {
 
   error_signin(this.error);
 }
-class init_state extends UserState {
-  final List string ;
-  final List id ;
-
-  init_state( this.string, this.id);
-}
+class init_state extends UserState {}
 class scss_update_state extends UserState {}
 class faile_update_state extends UserState {}

@@ -14,8 +14,6 @@ part 'user_event.dart';
 part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   List<grade_module> grade_modules = [];
-  List<String> grade_modules_string = [];
-  List<String> grade_modules_id = [];
   user_module? user_model;
 
   UserBloc() : super(UserInitial()) {
@@ -57,8 +55,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       value?.data.forEach((e){
           grade_modules.add(grade_module.fromjson(e));
           print(e);
-          grade_modules_string.add(e['name']);
-          grade_modules_id.add(e['id'].toString());
+          //grade_modules.add(e);
+
 
         });
 
@@ -66,7 +64,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   } catch(e){
       emit(error_signin("مكرر"));
     }finally{
-      emit(init_state(grade_modules_string, grade_modules_id));
+      emit(init_state());
     }
     }
 

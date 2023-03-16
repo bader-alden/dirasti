@@ -61,7 +61,6 @@ final exam_name;
                             itemCount: 4,
                             physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
-
                               return Padding(
                                 padding: const EdgeInsets.all(7.0),
                                 child: Card(
