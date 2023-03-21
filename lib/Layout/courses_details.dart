@@ -211,11 +211,13 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
   Future<List<BetterPlayerDataSource>> setupData(BuildContext context) async {
     for(int i =0; i<context.read<MainBloc>().part_list.length;i++){
       context.read<MainBloc>().part_list[i].part?.forEach((element) {
-        print(element.res!.values.first);
+        // print(element.res!.values.first);
+        // print(element.res );
         _dataSourceList.add(
           BetterPlayerDataSource(
-              BetterPlayerDataSourceType.network, element.res!.values.first
-            // ,resolutions: element.res
+              BetterPlayerDataSourceType.network,
+              element.res!.values.first,
+               resolutions: element.res?.map((key, value) => MapEntry(key, value.toString()))
           ),
         );
       });
@@ -256,6 +258,7 @@ Widget course_details_page_1(context, course_module course, state) {
       children: [
         Expanded(
           child: ListView(
+            physics: BouncingScrollPhysics(),
             children: [
               Row(
                 children: [
@@ -360,7 +363,7 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          ": الواحدات",
+          ": الوحدات",
           style: TextStyle(color: orange, fontSize: 22, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -438,9 +441,7 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
   return InkWell(
     borderRadius: BorderRadius.circular(10),
     onTap: () {
-
       if(is_video_play && _betterPlayerPlaylistController?.currentDataSourceIndex ==index&&video_tab_con?.index==part){
-        print("pause "*50);
         if( _betterPlayerPlaylistController!.betterPlayerController!.isPlaying()!){
           _betterPlayerPlaylistController?.betterPlayerController?.pause();
         }else {
@@ -454,14 +455,11 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
         setstate((){});
       }
       else if(is_video_play){
-        print(index);
-        print(_betterPlayerPlaylistController?.currentDataSourceIndex);
         // print("Currently playing video: " +
         //     _betterPlayerPlaylistController?.currentDataSourceIndex
         //         .toString());
         _betterPlayerPlaylistController?.setupDataSource(index);
         setstate((){});
-        print(_betterPlayerPlaylistController?.currentDataSourceIndex);
       }else{
         // setstate((){});
         //     context.read<MainBloc>().add(watch_event(video_tab_con?.index));

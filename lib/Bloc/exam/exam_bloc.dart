@@ -25,7 +25,6 @@ Map<int,int> correct_answer={};
       "grade":event.grade,
       "exam":event.exam,
     }).then((value) {
-      print(value?.data);
       value?.data.forEach((e){
         all_q.add(q_module.fromjson(e));
         if(all_q.length==value?.data.indexOf(e)+1){
@@ -42,20 +41,27 @@ Map<int,int> correct_answer={};
   }
 
   FutureOr<void> check_void(check_event event, Emitter<ExamState> emit) {
-    if(all_answer.length!=all_q.length){
-      print("not all ");
-    }else{
+    // if(all_answer.length!=all_q.length){
+    //   print("not all ");
+    // }else{
       all_answer.forEach((key, value) {
         if(all_q[key].index==value.toString()){
           correct_answer[key]=value;
-          print("is_ok");
         }else{
           wrong_answer[key]=value;
           correct_answer[key]=int.parse(all_q[key].index!);
         }
+
       });
+    all_q.forEach((element) {
+      if(wrong_answer.containsKey(all_q.indexOf(element))||correct_answer.containsKey(all_q.indexOf(element))){
+      }else{
+        wrong_answer[all_q.indexOf(element)]=5;
+        correct_answer[all_q.indexOf(element)]=int.parse(element.index!)-1;
+      }
+    });
       emit(check_state());
-    }
+
 
   }
 }

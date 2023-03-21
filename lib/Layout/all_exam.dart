@@ -33,8 +33,7 @@ class AllExam extends StatelessWidget {
                     physics: BouncingScrollPhysics(),
                     itemCount: context.read<MainBloc>().all_exam_list.length,
                     itemBuilder: (context, index) {
-                      var id =context.read<MainBloc>().all_exam_list[index]["id"];
-                      var name =context.read<MainBloc>().all_exam_list[index]["name"];
+                      var exam =context.read<MainBloc>().all_exam_list[index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Card(child: SizedBox(
@@ -44,7 +43,7 @@ class AllExam extends StatelessWidget {
                               SizedBox(width: 20,),
                               InkWell(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamDetails(subject: subject,exam: id,exam_name: name,)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamDetails(subject: subject,exam: exam)));
                                 },
                                 child: Center(
                                   child: Container(padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),

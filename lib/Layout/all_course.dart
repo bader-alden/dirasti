@@ -47,6 +47,7 @@ final teacher_module teacher;
             SizedBox(height: 15,),
 
             Expanded(child: ListView.builder(
+              physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: context.read<MainBloc>().course_list.length,
                 itemBuilder: (context,index){

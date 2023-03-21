@@ -1,8 +1,10 @@
 import 'package:dirasti/utils/const.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:url_launcher/url_launcher.dart';
+import 'package:dirasti/utils/dio.dart';
 import '../Bloc/user/user_bloc.dart';
 import '../main.dart';
 var _number_con=TextEditingController();
@@ -28,7 +30,6 @@ class Login extends StatelessWidget {
               (route) => false);
     }
     if (state is error_login) {
-      print(state.error);
       _is_loading = false;
       Tost(state.error, Colors.red);
     }
@@ -105,7 +106,13 @@ class Login extends StatelessWidget {
                   return Row(
                     children: [
                       Spacer(),
-                      TextButton(onPressed: (){}, child: Text("الدعم الفني",style: TextStyle(fontSize: 15))),
+                      TextButton(onPressed: (){
+                        showCupertinoDialog(context: context, builder: (context)=>Center(child: Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),width: 75,height: 75,child: Center(child: CircularProgressIndicator(color: blue,),),),));
+                        dio.get_data(url: "/data/the_support").then((value) {
+                          Navigator.pop(context);
+                          launchUrl(Uri.parse(value?.data[0]["link"]),mode:LaunchMode.externalNonBrowserApplication );
+                        });
+                      }, child: Text("الدعم الفني",style: TextStyle(fontSize: 15))),
                       Text("التواصل مع ",style: TextStyle(fontSize: 15)),
                     ],
                   );

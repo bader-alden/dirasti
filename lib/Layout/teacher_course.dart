@@ -22,7 +22,6 @@ final type;
 
         },
         builder: (context, state) {
-          print(context.read<MainBloc>().teacher_list);
           return Scaffold(
             backgroundColor: white,
             appBar: appbar_back((type =="course"?"كورسات مادة ":"ملفات مادة ") + subject.subject!),
@@ -50,6 +49,7 @@ final type;
                 ),
                 Expanded(
                   child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: context.read<MainBloc>().teacher_list.length,
                       itemBuilder: (context, index) {
@@ -86,10 +86,11 @@ Widget techer_course_list_item(BuildContext context, int index,teacher_module mo
               Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(model.teacher_name??"اسم الاستاذ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                  SizedBox(height: 7,),
-                  Text("وصف " * 5, style: TextStyle(color: Colors.grey, fontSize: 15), overflow: TextOverflow.ellipsis),
+                  Text(model.teacher_name??"اسم الاستاذ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21)),
+                  // SizedBox(height: 7,),
+                  // Text("وصف " * 5, style: TextStyle(color: Colors.grey, fontSize: 15), overflow: TextOverflow.ellipsis),
                 ],
               ),
               SizedBox(width: 20),

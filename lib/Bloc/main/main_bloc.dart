@@ -7,6 +7,7 @@ import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/cache.dart';
 import 'package:meta/meta.dart';
 import 'package:dirasti/utils/dio.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../Layout/courses_details.dart';
 import '../../module/teacher_module.dart';
 import '../../module/user_module.dart';
@@ -37,8 +38,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   List<Map> all_file_list=[];
   List<Map<String,dynamic>> all_exam_list=[];
   int porfile_tab_index=1;
+  String main_banner_image="";
   Future<FutureOr<void>> init_void(init event, Emitter<MainState> emit) async {
     try{
+      await dio.get_data(url: "/index/banner").then((value) {
+        main_banner_image = value?.data[0]["banner"];
+      });
       await dio.post_data(url:"/account/login_id",quary: {
         "user_id":cache.get_data("id"),
         "secret_code":cache.get_data("scode"),
@@ -48,7 +53,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         }else if(value?.data == "error2"){
           //  emit(error_login("غير موجود"));
         }else{
-          print(value?.data);
           user_model= user_module.fromjson(value?.data[0]);
           //print(user_model?.id);
           // cache.save_data("id", user_model?.id);
@@ -57,12 +61,12 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       });
       subject_list.clear();
       await dio.get_data(url: "/index/subject",quary: {"user_id":cache.get_data("id")}).then((value) {
-        print(value?.data);
         value?.data.forEach((e){
           subject_list.add(subject_module.fromjson(e));
         });
       });
-    }catch (e){}
+
+    }catch (e){print(e.toString());}
    finally{
       emit(init_state());
    }
@@ -74,7 +78,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "subject":event.name,
         "grade":event.grade
       }).then((value) {
-        print(value?.data);
         value?.data.forEach((e){
           teacher_list.add(teacher_module.fromjson(e));
           sec_teacher_list.add(teacher_module.fromjson(e));
@@ -96,7 +99,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "grade":event.grade,
         "teacher_name":event.teacher,
       }).then((value) {
-        print(value?.data);
         value?.data.forEach((e){
           course_list.add(course_module.fromjson(e));
          // teacher_list.add(teacher_module.fromjson(e));
@@ -106,6 +108,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }catch(e){
 
     }finally{
+      course_list.sort((a, b) => a.order!.compareTo(b.order!),);
       emit(course_state());
     }
   }
@@ -135,12 +138,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
             part_list.add(part_module.fromjson(e));
           });
           // part_list = part_list.reversed.toList();
-          part_list.forEach((element) {
+          part_list.sort((a, b) => a.order!.compareTo(b.order!),);
 
+          part_list.forEach((element) {
+            element.part?.sort((a, b) => a.order!.compareTo(b.order!));
             part_tab_list.add(element.name!);
             element.part?.forEach((element2) {
-              print(element.name! +"    " + element2.name!);
-              print(ind);
+              //print(element.name! +"    " + element2.name!);
+              //print(ind);
               if(video_index_map[part_list.indexOf(element)] == null){
                 video_index_map[part_list.indexOf(element)]=[];
               }
@@ -148,7 +153,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
               video_index_map[part_list.indexOf(element)]?.add(ind++);
             });
           });
-          print(video_index_map);
+
+          // print(video_index_map);
           emit(sub_state());
         }
         // value?.data.forEach((e){
@@ -160,12 +166,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }catch(e){
       print(e);
     }finally{
+     // part_list.sort((a, b) => a.order!.compareTo(b.order!),);
       // print(part_list[0].name);
       // print(part_list[0].part?[0].name);
      // print(part_list[0].part?[0].res);
-
-
-
      // emit(course_state());
     }
 
@@ -185,7 +189,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       }else if(value?.data == "error2"){
         //  emit(error_login("غير موجود"));
       }else{
-        print(value?.data);
         user_model= user_module.fromjson(value?.data[0]);
         emit(init_porfile_state());
         //print(user_model?.id);
@@ -200,7 +203,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     my_file_list.clear();
     emit(loading_porfile_state());
    await dio.get_data(url: "/index/my_course",quary: {"user_id":cache.get_data("id"),"is_course":event.type}).then((value) {
-     print(value?.data);
      if(value?.data =='notfound10'||value?.data[0].length==0 || value?.data ==' '){
        emit(empty_profile_state());
      }else {
@@ -209,7 +211,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
            course_list.add(course_module.fromjson(e));
          }else{
            my_file_list.add(e);
-          print("fileeeee");
          }
        if(value.data[0].indexOf(e)+1 == course_list.length ||value.data[0].indexOf(e)+1 == my_file_list.length){
          emit(init_porfile_state());
@@ -230,12 +231,24 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       value?.data.forEach((element){
         all_exam_list.add(element);
         if(all_exam_list.length == value.data.indexOf(element)+1){
+          all_file_list.sort((a, b) => a['ordero'].toString().compareTo(b['ordero'].toString()));
           emit(get_exam_state());
         }
       });
     });
   }
+  void check_version (){
+    print("start check");
+    dio.get_data(url: "/index/version").then((value) {
+      PackageInfo.fromPlatform().then((valuee) {
+        if(value?.data[0]['version']==valuee.version){
+        }else{
+          emit(not_match_version(value?.data[0]['link']));
+        }
+      });
 
+    });
+  }
   Future<FutureOr<void>> get_file_void(get_file_event event, Emitter<MainState> emit) async {
     try{
       await dio.get_data(url:"/index/file",quary: {
@@ -243,7 +256,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "grade":event.grade,
         "teacher_name":event.teacher,
       }).then((value) {
-        print(value?.data);
         all_file_list.clear();
         // print(value?.data);
         // print(event.subject);
@@ -259,6 +271,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     }catch(e){
 
     }finally{
+      all_file_list.sort((a, b) => a['ordero'].toString().compareTo(b['ordero'].toString()));
       emit(course_state());
     }
   }
@@ -273,7 +286,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "user_id":cache.get_data("id"),
         "is_course":0,
       }).then((value) {
-         print(value?.data);
         if(value?.data=="notfound"){
           emit(not_sub_file_state());
           print("okada");
@@ -315,9 +327,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     final suge = serarch_list.where((element) {
       final title = element.teacher_name!.toLowerCase();
       final input = event.query.toLowerCase();
-      print(event.query);
-      print(element.teacher_name);
-
       return title.contains(input);
     }).toList();
 

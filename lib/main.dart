@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:io';
@@ -54,7 +55,27 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message,flutterLo
   importance: Importance.max,
 );
 main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
+ // await futer();
+ //   const platform = MethodChannel('samples.flutter.dev/battery');
+ // // try {
+ //      platform.invokeMethod('add');
+  // } on PlatformException catch (e) {
+  //   print( "Failed to get battery level: '${e.message}'.");
+  // }
+
+
+  // const notiplatform = MethodChannel('samples.flutter.dev/noti');
+  // try {
+  //   await notiplatform.invokeMethod('getBatteryLevel');
+  // } on PlatformException catch (e) {
+  //   print( "Failed to get battery level: '${e.message}'.");
+  // }
+
+
+
+
+
   // await dio.init();
   // await cache.init();
   // // cache.remove_data("id");
@@ -69,7 +90,7 @@ main() async {
   // await flutterLocalNotificationsPlugin
   //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
   //     ?.createNotificationChannel(channel);
-  // flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+  // // flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
   // final fcmToken = await FirebaseMessaging.instance.getToken();
   // FirebaseMessaging.onBackgroundMessage((message) => _firebaseMessagingBackgroundHandler(message,flutterLocalNotificationsPlugin));
   // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -103,7 +124,7 @@ class App extends StatelessWidget {
     enabled: false,
       builder: (BuildContext context) {
        return FutureBuilder(
-         future:futer(),
+        future: futer(),
          builder: (context,snapshot) {
            if (snapshot.connectionState == ConnectionState.waiting) {
              return Container(width: double.infinity,
@@ -172,7 +193,7 @@ class App extends StatelessWidget {
                  ),
                ),
              );
-           }
+          }
          }
        );
       },
@@ -180,45 +201,48 @@ class App extends StatelessWidget {
     );
   }
 
-  futer() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await dio.init();
-    await cache.init();
-    // cache.remove_data("id");
-    if(cache.get_data("scode")==null){
-      cache.save_data("scode", Uuid().v4());
-    }
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(const InitializationSettings(android: AndroidInitializationSettings('app_icon')));
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-    //flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    print(fcmToken);
-    FirebaseMessaging.onBackgroundMessage((message) => _firebaseMessagingBackgroundHandler(message,flutterLocalNotificationsPlugin));
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                icon: 'app_icon',
-              ),
-            ));
-      }
-    });
-    await FirebaseMessaging.instance.subscribeToTopic("all");
-   await Future.delayed(Duration(seconds: 6));
+
+}
+futer() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await cache.init();
+
+  await dio.init();
+  // cache.remove_data("id");
+  if(cache.get_data("scode")==null){
+    cache.save_data("scode", Uuid().v4());
   }
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.initialize(const InitializationSettings(android: AndroidInitializationSettings('app_icon')));
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  //flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print(fcmToken);
+  FirebaseMessaging.onBackgroundMessage((message) => _firebaseMessagingBackgroundHandler(message,flutterLocalNotificationsPlugin));
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              icon: 'app_icon',
+            ),
+          ));
+    }
+  });
+  await FirebaseMessaging.instance.subscribeToTopic("all");
+  await Future.delayed(Duration(seconds: 5,milliseconds: 500));
+  return true;
 }

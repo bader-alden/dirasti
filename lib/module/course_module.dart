@@ -11,9 +11,11 @@ class course_module{
   String? part;
   String? number_hours;
   String? is_course;
+  String? order;
   course_module.fromjson(json){
     teacher_name = json['teacher_name'];
     name = json['name'];
+    order = json['ordero'].toString();
     id = json['id'].toString();
     subject = json['subject'].toString();
     banner = json['banner'].toString();

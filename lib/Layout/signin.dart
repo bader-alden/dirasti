@@ -1,3 +1,4 @@
+import 'package:dirasti/Layout/terms.dart';
 import 'package:dirasti/main.dart';
 import 'package:dirasti/module/user_module.dart';
 import 'package:dirasti/utils/cache.dart';
@@ -12,7 +13,7 @@ var _number_con = TextEditingController();
 var _name_con = TextEditingController();
 var _sex_con = ['أنثى', 'ذكر'];
 var _sex_value = null;
-var _grade = "";
+var _grade ;
 bool _is_check = false;
 bool init = false;
 
@@ -44,7 +45,6 @@ class Signin extends StatelessWidget {
                 (route) => false);
           }
           if (state is error_signin) {
-            print(state.error);
             is_loadin = false;
             Tost(state.error, Colors.red);
           }
@@ -216,7 +216,9 @@ class Signin extends StatelessWidget {
                                 children: [
                                   Spacer(),
                                   TextButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Terms()));
+                                      },
                                       child: Text("سياسة الخصوصية", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl)),
                                   Text("الضغط على إنشاء الحساب تعني الموافقة على", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl),
                                   Checkbox(

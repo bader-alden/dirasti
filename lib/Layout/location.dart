@@ -43,7 +43,6 @@ dio.get_data(url: "/data/Coupon_points_of_sale",).then((value) {
                 InkWell(
                   onTap: () async {
                     final availableMaps = await MapLauncher.installedMaps;
-                    print(availableMaps);
                     await availableMaps.first.showMarker(
                       coords: Coords(double.parse(list_location[index]["lat"]), double.parse(list_location[index]["lang"])),
                       title: list_location[index]["name"],

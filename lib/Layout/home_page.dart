@@ -1,5 +1,6 @@
 import 'package:dirasti/Bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:dirasti/Layout/profile.dart';
+import 'package:dirasti/Layout/version.dart';
 import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-  create: (context) => MainBloc()..add(init()),
+  create: (context) => MainBloc()..check_version()..add(init()),
   child: BlocConsumer<MainBloc, MainState>(
-  listener: (context, state) {},
+  listener: (context, state) {
+    if(state is not_match_version){
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Version(link:state.link)), (route) => false);
+    }
+  },
   builder: (context, state) {
     return Container(
       color:  Color.fromRGBO(250, 250, 250, 1.0),
@@ -48,7 +53,10 @@ class HomePage extends StatelessWidget {
             ],
             ),
             SizedBox(height: 30,),
-            banner_widget("https://ubiquitous-sepia-rainforest.glitch.me/file/4f00f8ff-323c-44cc-8e2e-f67b359c81e4.png"),
+            if(context.read<MainBloc>().main_banner_image !="")
+            banner_widget(context.read<MainBloc>().main_banner_image)
+            else
+              Container(height: 200,child: Center(child: CircularProgressIndicator(color: blue,)),),
             SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

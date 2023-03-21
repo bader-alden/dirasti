@@ -121,7 +121,7 @@ class AllFile extends StatelessWidget {
               ),
             ),
           ));
-          context.read<MainBloc>().add(get_file_details_event(subject.grade, subject.id, teacher.id, 1));
+          context.read<MainBloc>().add(get_file_details_event(subject.grade, subject.id, teacher.id, model['id'].toString()));
         },
         child: Card(child: SizedBox(
           height: 100,
@@ -129,9 +129,8 @@ class AllFile extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text("5000"+" ل.س ",style: TextStyle(color: orange,fontSize:18,fontWeight: FontWeight.bold),textDirection: TextDirection.rtl,),
+                child: Text(model["price"].toString() == "0" ?"مجاني" : (model["price"]+" ل.س "),style: TextStyle(color: orange,fontSize:18,fontWeight: FontWeight.bold),textDirection: TextDirection.rtl,),
               ),
-
               Row(
                 children: [
 

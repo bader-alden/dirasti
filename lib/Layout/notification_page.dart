@@ -21,7 +21,6 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
     super.initState();
     _tab_con = TabController(length: 2, vsync: this);
     dio.get_data(url: "/notices",quary: {"user_id":cache.get_data("id")}).then((value) {
-    print(value?.data);
     value?.data.forEach((e){
       _noti_list.add(noti_module.fromjson(e));
       if( _noti_list.length-1==value?.data.indexOf(e)){
@@ -77,7 +76,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
           //     ),
           //   ),
           // ),
-          SizedBox(height: 30,),
+          SizedBox(height: 15,),
           Expanded(
             child: ListView.separated(
                 physics: BouncingScrollPhysics(),
@@ -86,7 +85,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                 padding: const EdgeInsets.all(15.0),
                 child: Row(
                   children: [
-                    Icon(Icons.more_vert),
+                  //  Icon(Icons.more_vert),
                     Spacer(),
                     Column(
                       children: [

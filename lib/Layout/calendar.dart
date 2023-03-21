@@ -35,15 +35,14 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
     return BlocProvider(
   create: (context) => CalendarBloc()..add(init_event((DateTime.now().month-1).toString()+"/"+(DateTime.now().day-1).toString())),
   child: BlocConsumer<CalendarBloc, CalendarState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
+  listener: (context, state) {},
   builder: (context, state) {
     return Scaffold(
       floatingActionButton: InkWell(
         onTap: () async {
+          var a =context.read<CalendarBloc>().all_subject_calendar;
          // context.read<CalendarBloc>().add(insert_event("7/3", "12:20", "bbbba", "bbbbbb"));
-        await  Navigator.push(context, MaterialPageRoute(builder: (context)=>NewCalendar()));
+        await  Navigator.push(context, MaterialPageRoute(builder: (context)=>NewCalendar(list_subject:a)));
         context.read<CalendarBloc>().add(get_event(_month_con!.index.toString()+"/"+_day_con!.index.toString()));
         },
         child: CircleAvatar(radius: 35,
@@ -84,7 +83,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
                      setState(() {  });
                       number_of_day =  check_number_day(value+1);
                       _day_con=TabController(length:number_of_day,vsync: this,initialIndex: DateTime.now().day-1);
-
+                     context.read<CalendarBloc>().add(get_event(value.toString()+"/"+_day_con!.index.toString()));
                   },
                 ),
               ),
@@ -129,15 +128,13 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
                   onTap: (value) async {
                    // setState(()  {});
                     context.read<CalendarBloc>().add(get_event(_month_con!.index.toString()+"/"+value.toString()));
-                    print(value);
-                    print(_month_con!.index);
-                    print("----------------------");
                   },
                 ),
               ),
             ),
           ),
           SizedBox(height: 20,),
+          if(context.read<CalendarBloc>().all_subject_calendar.isNotEmpty)
           Expanded(
             child: ListView.builder(
               physics: BouncingScrollPhysics(),
@@ -174,27 +171,54 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   }
 
   Widget _calendar_item(int index, BuildContext context,calendar_module model) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(model.subject ?? "مادة العلوم", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  Text(model.body??"المهمة"),
-                  Text(model.time??"الوقت")
-                ],
-              ),
-              SizedBox(width: 20,),
-              Image.asset("assets/عربي.png", width: 50,),
-              SizedBox(width: 10,),
-            ],
+    return InkWell(
+      onTap: (){
+        showModalBottomSheet(context: context,backgroundColor: Colors.transparent, builder: (_)=>Container(height: 150,
+          decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),color: Colors.white),
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(onPressed: () async {
+              Navigator.pop(_);
+              var a =context.read<CalendarBloc>().all_subject_calendar;
+                await  Navigator.push(context, MaterialPageRoute(builder: (context)=>NewCalendar(list_subject: a,cal: model,)));
+              context.read<CalendarBloc>().add(get_event(_month_con!.index.toString()+"/"+_day_con!.index.toString()));
+                }, child: Text("تعديل")),
+            SizedBox(height: 30,),
+            TextButton(onPressed: (){
+                context.read<CalendarBloc>().add(delete_event(model.id, _month_con!.index.toString()+"/"+_day_con!.index.toString()));
+                Navigator.pop(_);
+            }, child: Text("حذف",style: TextStyle(color: Colors.red),)),
+          ],
+        ),
+        ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Spacer(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(model.subject ?? "مادة العلوم", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                    Text(model.body??"المهمة"),
+                    Text(model.time??"الوقت")
+                  ],
+                ),
+                SizedBox(width: 20,),
+                if(context.read<CalendarBloc>().all_subject_calendar.where((element) => element['subject'] == model.subject).isNotEmpty)
+                Image.network(context.read<CalendarBloc>().all_subject_calendar.where((element) => element['subject'] == model.subject).first['photo'], width: 50,)
+                else
+                  Image.asset("assets/home_logo.png",width: 50,color: blue,),
+                SizedBox(width: 10,),
+              ],
+            ),
           ),
         ),
       ),

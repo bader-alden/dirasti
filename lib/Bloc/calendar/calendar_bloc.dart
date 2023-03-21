@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dirasti/Bloc/main/main_bloc.dart';
 import 'package:dirasti/utils/cache.dart';
+import 'package:dirasti/utils/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,6 +18,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
    on<init_event>(init_void);
    on<get_event>(get_void);
    on<insert_event>(insert_void);
+   on<updeate_event>(update_void);
+   on<delete_event>(delete_void);
   }
   static CalendarBloc get(context) => BlocProvider.of(context);
   List<calendar_module> all_data = [];
@@ -44,8 +47,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   //   getdata(database);
   //   emit(db_delete_state());
   // }
-
+  List all_subject_calendar= [];
   Future<FutureOr<void>> init_void(init_event event, Emitter<CalendarState> emit) async {
+    await dio.get_data(url: "/index/calendar",quary: {"user_id":cache.get_data("id")}).then((value) =>all_subject_calendar = value?.data );
    await openDatabase(
       "database.db",
       version: 1,
@@ -71,7 +75,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
    await database?.rawQuery("SELECT * FROM tasks WHERE date = ? ",[event.date]).then((value) {
       all_data.clear();
       var tasks = value;
-      print(tasks);
       tasks.forEach((element) {
         all_data.add(calendar_module.fromjson(element));
       });
@@ -96,6 +99,15 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       // getdata(database,event.date);
       // emit(db_insert_state());
     });
+
+  }
+
+  Future<FutureOr<void>> update_void(updeate_event event, Emitter<CalendarState> emit) async {
+   await database?.rawUpdate('UPDATE tasks SET body = ? , time = ? , date = ? , subject = ? WHERE id = ?', [event.body , event.time , event.date,event.subject ,event.id]).then((value) =>  add(get_event(event.date)));
+  }
+
+  Future<FutureOr<void>> delete_void(delete_event event, Emitter<CalendarState> emit) async {
+  await  database?.rawDelete('DELETE FROM tasks WHERE id = ?', [event.id]).then((value) =>add(get_event(event.date)) );
 
   }
 }

@@ -1,12 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dirasti.dirasti">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
         android:label="دراستي"
         android:name="${applicationName}"
        android:usesCleartextTraffic="true"
         android:exported="true"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -35,5 +38,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+    <receiver android:name=".AlarmReceiver" />
     </application>
 </manifest>

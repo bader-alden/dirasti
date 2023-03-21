@@ -20,5 +20,18 @@ class insert_event extends CalendarEvent{
 
   insert_event(this.date, this.time, this.subject, this.body);
 }
-class updeate_event extends CalendarEvent{}
-class delete_event extends CalendarEvent{}
+class updeate_event extends CalendarEvent{
+  final id;
+  final date;
+  final time;
+  final subject;
+  final body;
+
+  updeate_event(this.id , this.date, this.time, this.subject, this.body);
+}
+class delete_event extends CalendarEvent{
+  final id ;
+  final date ;
+
+  delete_event(this.id,this.date);
+}
