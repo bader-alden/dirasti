@@ -220,7 +220,7 @@ class Signin extends StatelessWidget {
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>Terms()));
                                       },
                                       child: Text("سياسة الخصوصية", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl)),
-                                  Text("الضغط على إنشاء الحساب تعني الموافقة على", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl),
+                                  Text(" الموافقة على", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl),
                                   Checkbox(
                                       value: _is_check,
                                       onChanged: (value) {
