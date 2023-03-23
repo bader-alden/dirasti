@@ -243,6 +243,6 @@ futer() async {
     }
   });
   await FirebaseMessaging.instance.subscribeToTopic("all");
-  await Future.delayed(Duration(seconds: 5,milliseconds: 500));
+  await Future.delayed(Duration(seconds: 4,milliseconds: 500));
   return true;
 }

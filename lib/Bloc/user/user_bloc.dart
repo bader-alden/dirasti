@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
@@ -30,7 +31,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     await FirebaseMessaging.instance.getToken().then((valued) async {
       await dio.post_data(url: "/account/signin", quary: {
         "name": event.name,
-        "email": event.email,
+        //"email": event.email,
         "is_male": event.is_male,
         "grade": event.grade,
         "mobile_id": event.mobile_id,
@@ -38,6 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         "gsm_token2":valued?.split(":")[1],
         "gsm_token":valued?.split(":")[0],
       }).then((value) {
+
         if (value?.data == "error3") {
           emit(error_signin("مكرر"));
         } else {
@@ -102,7 +104,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     await FirebaseMessaging.instance.getToken().then((valued) async {
       await dio.post_data(url: "/account/update_account", quary: {
         "name": event.name,
-        "email": event.email,
+        // "email": event.email,
         "is_male": event.is_male,
         "grade": event.grade,
         "mobile_id": event.mobile_id,

@@ -12,7 +12,7 @@ import '../Bloc/user/user_bloc.dart';
 var _number_con = TextEditingController();
 var _name_con = TextEditingController();
 var _sex_con = ['أنثى', 'ذكر'];
-var _sex_value = null;
+var _sex_value = 0;
 var _grade ;
 bool _is_check = false;
 bool init = false;
@@ -26,7 +26,7 @@ class Signin extends StatelessWidget {
     var is_loadin = false;
     if (!init && type == "edit") {
       init = true;
-    _sex_value = _sex_con[data!.is_male! ? 1 : 0];
+    _sex_value = data!.is_male! ? 1 : 0;
     _number_con.text = data!.mobile_id!;
     _name_con.text = data!.name!;
     _grade = data!.grade!;
@@ -154,13 +154,21 @@ class Signin extends StatelessWidget {
                                 child: Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: DropdownButton(
-                                    items: _sex_con.map(drop_item).toList(),
+                                    items: _sex_con.map((e)=>DropdownMenuItem(
+                                        alignment: Alignment.centerRight,
+                                        value: _sex_con.indexOf(e),
+                                        child: Text(
+                                          e,
+                                          maxLines: 1,
+                                          textDirection: TextDirection.rtl,
+                                          overflow: TextOverflow.ellipsis,
+                                        ))).toList(),
                                     onChanged: (value) {
                                       setstatae(() {
-                                        _sex_value = value;
+                                        _sex_value = int.parse(value.toString());
                                       });
                                     },
-                                    value: _sex_value ?? _sex_con[0],
+                                    value: _sex_value ,
                                     isExpanded: true,
                                     alignment: Alignment.centerRight,
                                     underline: Text(""),
@@ -244,7 +252,7 @@ class Signin extends StatelessWidget {
                                       is_loadin = true;
                                       context
                                           .read<UserBloc>()
-                                          .add(user_update(_name_con.text, "aaaaaa", _number_con.text, _sex_con.indexOf(_sex_value), _grade));
+                                          .add(user_update(_name_con.text, "aaaaaa", _number_con.text, _sex_value, _grade));
                                     });
                                   } else {
                                     if (_name_con.text.length < 1) {
@@ -272,10 +280,10 @@ class Signin extends StatelessWidget {
                                   if (_is_check && _name_con.text.length > 1 && _number_con.text.length == 8 && !is_loadin) {
                                     statee(() {
                                       is_loadin = true;
-                                      context
-                                          .read<UserBloc>()
-                                          .add(user_signin(_name_con.text, "aaaaaa", _number_con.text, _sex_con.indexOf(_sex_value), _grade));
                                     });
+                                    context
+                                        .read<UserBloc>()
+                                        .add(user_signin(_name_con.text, "aaaaaa", _number_con.text, _sex_value, _grade));
                                   } else {
                                     if (!_is_check) {
                                       Tost("يرجى الموافقة على سياسة الخصوصية", Colors.red);
@@ -283,6 +291,13 @@ class Signin extends StatelessWidget {
                                       Tost("لايمكن ان يكون الاسم فارغا", Colors.red);
                                     } else if (_number_con.text.length != 8) {
                                       Tost("يرجى إدخال رقم جوال صالح", Colors.red);
+                                    }else  if(_grade == null){
+                                      Tost("يرجى أختيار صف", Colors.red);
+                                    }
+                                    else if(_sex_value == null){
+                                      Tost("يرجى أختيار جنس", Colors.red);
+                                    }else{
+                                      Tost("حدث خطأ", Colors.red);
                                     }
                                   }
                                 },
@@ -309,14 +324,13 @@ class Signin extends StatelessWidget {
       ),
     );
   }
-
-  DropdownMenuItem drop_item(item) => DropdownMenuItem(
-      alignment: Alignment.centerRight,
-      value: item,
-      child: Text(
-        item,
-        maxLines: 1,
-        textDirection: TextDirection.rtl,
-        overflow: TextOverflow.ellipsis,
-      ));
+  // DropdownMenuItem drop_item(item,a) => DropdownMenuItem(
+  //     alignment: Alignment.centerRight,
+  //     value: item,
+  //     child: Text(
+  //       item,
+  //       maxLines: 1,
+  //       textDirection: TextDirection.rtl,
+  //       overflow: TextOverflow.ellipsis,
+  //     ));
 }
