@@ -254,6 +254,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  flutter_hms_gms_availability:
+    dependency: "direct main"
+    description:
+      name: flutter_hms_gms_availability
+      sha256: "54cb1fdc7b43228a9cd4b790cf62d5a34ddcd281ae9374877309e5f6a9065be0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   flutter_hooks:
     dependency: "direct main"
     description:

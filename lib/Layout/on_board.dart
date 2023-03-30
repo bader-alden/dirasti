@@ -5,6 +5,7 @@ import 'package:dirasti/utils/const.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hms_gms_availability/flutter_hms_gms_availability.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../Bloc/user/user_bloc.dart';
@@ -22,13 +23,17 @@ class OnBoard extends StatelessWidget {
               if(snapshot.data!=null){
                 PackageInfo.fromPlatform().then((valuee) {
                   if(snapshot.data?.data[0]['version']==valuee.version){
+                    FlutterHmsGmsAvailability.isGmsAvailable.then((t) {
+                     print(t?"gms":"hms");
+                    });
+                    FlutterHmsGmsAvailability.isHmsAvailable.then((t) {
+                      print(t?"hms":"gms");
+                    });
                   }else{
-
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Version(link:snapshot.data?.data[0]['link'])), (route) => false);
                   }
                 });
               }
-
               return Center(
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

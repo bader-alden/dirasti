@@ -28,7 +28,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
 
   Future<FutureOr<void>> signin(user_signin event, Emitter<UserState> emit) async {
-    await FirebaseMessaging.instance.getToken().then((valued) async {
+    // await FirebaseMessaging.instance.getToken().then((valued) async {
       await dio.post_data(url: "/account/signin", quary: {
         "name": event.name,
         //"email": event.email,
@@ -36,9 +36,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         "grade": event.grade,
         "mobile_id": event.mobile_id,
         "secret_code": cache.get_data("scode"),
-        "gsm_token2":valued?.split(":")[1],
-        "gsm_token":valued?.split(":")[0],
+        // "gsm_token2":valued?.split(":")[1],
+        // "gsm_token":valued?.split(":")[0],
+        "gsm_token2":'test2',
+        "gsm_token":'test1',
       }).then((value) {
+        //TODO
 
         if (value?.data == "error3") {
           emit(error_signin("مكرر"));
@@ -47,7 +50,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           emit(scss_signin());
         }
       });
-    });
+    // });
     //`name`, `email`, `is_male`, `course_file`,`grade`,`mobile_id`,`secret_code`
   }
 
@@ -71,12 +74,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
 
   Future<FutureOr<void>> login(user_login event, Emitter<UserState> emit) async {
-    await FirebaseMessaging.instance.getToken().then((valued) async {
+   // await FirebaseMessaging.instance.getToken().then((valued) async {
       await dio.post_data(url:"/account/login",quary: {
         "mobile_id":event.num,
         "secret_code":cache.get_data("scode"),
-        "gsm_token2":valued?.split(":")[1],
-        "gsm_token":valued?.split(":")[0],
+        // "gsm_token2":valued?.split(":")[1],
+        // "gsm_token":valued?.split(":")[0],
+        "gsm_token2":'test1',
+        "gsm_token":'test2',
       }).then((value){
         if(value?.data == "error1"){
           emit(error_login("تم تسجيل الدخول من جوال اخر"));
@@ -91,7 +96,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
 
 
-    });
+  //  });
 
 
     //`name`, `email`, `is_male`, `course_file`,`grade`,`mobile_id`,`secret_code`

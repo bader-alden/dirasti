@@ -3,6 +3,7 @@ import 'package:dirasti/main.dart';
 import 'package:dirasti/module/user_module.dart';
 import 'package:dirasti/utils/cache.dart';
 import 'package:dirasti/utils/const.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -228,7 +229,7 @@ class Signin extends StatelessWidget {
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>Terms()));
                                       },
                                       child: Text("سياسة الخصوصية", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl)),
-                                  Text(" الموافقة على", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl),
+                                  Text("الموافقة على", style: TextStyle(fontSize: 11), textDirection: TextDirection.rtl),
                                   Checkbox(
                                       value: _is_check,
                                       onChanged: (value) {
@@ -275,41 +276,53 @@ class Signin extends StatelessWidget {
                             })
                           else
                             StatefulBuilder(builder: (context, statee) {
-                              return TextButton(
-                                onPressed: () {
-                                  if (_is_check && _name_con.text.length > 1 && _number_con.text.length == 8 && !is_loadin) {
-                                    statee(() {
-                                      is_loadin = true;
-                                    });
-                                    context
-                                        .read<UserBloc>()
-                                        .add(user_signin(_name_con.text, "aaaaaa", _number_con.text, _sex_value, _grade));
-                                  } else {
-                                    if (!_is_check) {
-                                      Tost("يرجى الموافقة على سياسة الخصوصية", Colors.red);
-                                    } else if (_name_con.text.length < 1) {
-                                      Tost("لايمكن ان يكون الاسم فارغا", Colors.red);
-                                    } else if (_number_con.text.length != 8) {
-                                      Tost("يرجى إدخال رقم جوال صالح", Colors.red);
-                                    }else  if(_grade == null){
-                                      Tost("يرجى أختيار صف", Colors.red);
+                              return IgnorePointer(
+                                  ignoring: is_loadin,
+                                child: TextButton(
+                                  onPressed: () {
+                                    if (_is_check && _name_con.text.isNotEmpty && _number_con.text.length == 8 && !is_loadin) {
+                                      statee(() {
+                                        is_loadin = true;
+                                      });
+                                      // Tost("ok", Colors.green);
+                                      context
+                                          .read<UserBloc>()
+                                          .add(user_signin(_name_con.text, "aaaaaa", _number_con.text, _sex_value, _grade));
+                                    } else {
+                                     if (is_loadin) {
+                                    }else if (!_is_check) {
+                                        Tost("يرجى الموافقة على سياسة الخصوصية", Colors.red);
+                                      } else if (_name_con.text.isEmpty) {
+                                        Tost("لايمكن ان يكون الاسم فارغا", Colors.red);
+
+                                      }else if (_number_con.text.length != 8) {
+                                        Tost("يرجى إدخال رقم جوال صالح", Colors.red);
+
+                                      }else  if(_grade == null){
+                                        Tost("يرجى أختيار صف", Colors.red);
+
+                                      }
+                                      else if(_sex_value == null){
+                                        Tost("يرجى أختيار جنس", Colors.red);
+
+                                      }else{
+                                        Tost("حدث خطأ", Colors.red);
+                                        statee(() {
+                                          is_loadin = true;
+                                        });
+                                      }
                                     }
-                                    else if(_sex_value == null){
-                                      Tost("يرجى أختيار جنس", Colors.red);
-                                    }else{
-                                      Tost("حدث خطأ", Colors.red);
-                                    }
-                                  }
-                                },
-                                child:  AnimatedContainer(
-                                    duration: Duration(milliseconds: 300),
-                                    width: is_loadin ? 60:MediaQuery.of(context).size.width/1.2,
-                                    height: 60,
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: blue),
-                                    child: Center(
-                                        child: is_loadin
-                                            ? CircularProgressIndicator(color: Colors.white,)
-                                            : Text("إنشاء حساب", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)))),
+                                  },
+                                  child:  AnimatedContainer(
+                                      duration: Duration(milliseconds: 300),
+                                      width: is_loadin ? 60:MediaQuery.of(context).size.width/1.2,
+                                      height: 60,
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: blue),
+                                      child: Center(
+                                          child: is_loadin
+                                              ? CircularProgressIndicator(color: Colors.white,)
+                                              : Text("إنشاء حساب", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)))),
+                                ),
                               );
                             }),
                         ],

@@ -63,6 +63,9 @@ dependencies:
   animated_flip_counter:
   flutter_countdown_timer:
   package_info_plus:
+  flutter_hms_gms_availability:
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
