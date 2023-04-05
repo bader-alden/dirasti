@@ -306,8 +306,15 @@ futer() async {
     if(t){
       await Push.setAutoInitEnabled(true);
       Push.onMessageReceivedStream.listen((e)=>_onMessageReceived(e,flutterLocalNotificationsPlugin) , onError: _onMessageReceiveError);
-      await Push.registerBackgroundMessageHandler((e)=>backgroundMessageCallback(e,flutterLocalNotificationsPlugin));
+      //await Push.registerBackgroundMessageHandler((e)=>backgroundMessageCallback(e,flutterLocalNotificationsPlugin));
       await Push.getId().then((value) => print("HMS HMS "+ value!));
+      Push.getToken("bader");
+        Push.getTokenStream.listen((event) {
+          print("=="*10);
+          print(event);
+          print("=="*10);
+        });
+
     }
   });
   await Future.delayed(Duration(seconds: 4,milliseconds: 500));
