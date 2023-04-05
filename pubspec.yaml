@@ -64,7 +64,8 @@ dependencies:
   flutter_countdown_timer:
   package_info_plus:
   flutter_hms_gms_availability:
-
+  huawei_push:
+  flutter_dynamic_icon:
 
 dev_dependencies:
   flutter_test:

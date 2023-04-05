@@ -4,7 +4,7 @@ import 'dart:convert';
 class dio {
   static Dio? dios;
   static init() {
-    final str = "aHR0cHM6Ly91YmlxdWl0b3VzLXNlcGlhLXJhaW5mb3Jlc3QuZ2xpdGNoLm1l";
+    final str = "aHR0cHM6Ly93b3JrYWJsZS1mb3Jlc3QtcXVvdGF0aW9uLmdsaXRjaC5tZS8=";
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String decoded = stringToBase64.decode(str);
     dios = Dio(BaseOptions(

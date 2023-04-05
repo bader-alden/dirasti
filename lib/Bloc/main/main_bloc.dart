@@ -5,6 +5,8 @@ import 'package:dirasti/module/course_module.dart';
 import 'package:dirasti/module/part_module.dart';
 import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/cache.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:meta/meta.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -239,16 +241,16 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
   void check_version (){
     print("start check");
-    dio.get_data(url: "/index/version").then((value) {
+    dio.get_data(url: "/index/version").then((value) async {
       PackageInfo.fromPlatform().then((valuee) {
         if(value?.data[0]['version']==valuee.version){
         }else{
           emit(not_match_version(value?.data[0]['link']));
         }
       });
-
     });
   }
+
   Future<FutureOr<void>> get_file_void(get_file_event event, Emitter<MainState> emit) async {
     try{
       await dio.get_data(url:"/index/file",quary: {

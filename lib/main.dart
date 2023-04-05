@@ -14,7 +14,10 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hms_gms_availability/flutter_hms_gms_availability.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:huawei_push/huawei_push.dart' hide  RemoteMessage , Importance ;
+import 'package:huawei_push/huawei_push.dart' as huawi show  RemoteMessage   ;
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
@@ -25,6 +28,37 @@ import 'Layout/setting.dart';
 import 'dart:convert';
 import './utils/cache.dart';
 import 'firebase_options.dart';
+ void backgroundMessageCallback(huawi.RemoteMessage remoteMessage,flutterLocalNotificationsPlugin) async {
+String? data = remoteMessage.data;
+
+Push.localNotification({
+HMSLocalNotificationAttr.TITLE: '[Headless] DataMessage Received',
+HMSLocalNotificationAttr.MESSAGE: data
+});
+RemoteMessageNotification? notification = remoteMessage.notification;
+if (notification != null ) {
+  flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      data,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          enableLights: true,
+          playSound: true,
+          channel.id,
+          channel.name,
+          channel.description,
+          icon: 'app_icon',
+          // other properties...
+        ),
+      ));
+}
+ }
+
+
+void _onMessageReceiveError(Object error) {
+  // Called when an error occurs while receiving the data message
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message,flutterLocalNotificationsPlugin) async {
   await Firebase.initializeApp();
@@ -54,8 +88,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message,flutterLo
   'High Importance Notifications', // description
   importance: Importance.max,
 );
+void _onMessageReceived(huawi.RemoteMessage remoteMessage,flutterLocalNotificationsPlugin) {
+  // Called when a data message is received
+  String? data = remoteMessage.data;
+  RemoteMessageNotification? notification = remoteMessage.notification;
+  if (notification != null ) {
+    flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        data,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            enableLights: true,
+            playSound: true,
+            channel.id,
+            channel.name,
+            channel.description,
+            icon: 'app_icon',
+            // other properties...
+          ),
+        ));
+  }
+}
 main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
+
  // await futer();
  //   const platform = MethodChannel('samples.flutter.dev/battery');
  // // try {
@@ -206,7 +262,6 @@ class App extends StatelessWidget {
 futer() async {
   WidgetsFlutterBinding.ensureInitialized();
   await cache.init();
-
   await dio.init();
   // cache.remove_data("id");
   if(cache.get_data("scode")==null){
@@ -221,28 +276,40 @@ futer() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print(fcmToken);
-  FirebaseMessaging.onBackgroundMessage((message) => _firebaseMessagingBackgroundHandler(message,flutterLocalNotificationsPlugin));
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channel.description,
-              icon: 'app_icon',
-            ),
-          ));
+  FlutterHmsGmsAvailability.isGmsAvailable.then((t) async {
+    print(t?"gms":"hms");
+    if(t){
+      FirebaseMessaging.onBackgroundMessage((message) => _firebaseMessagingBackgroundHandler(message,flutterLocalNotificationsPlugin));
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  icon: 'app_icon',
+                ),
+              ));
+        }
+      });
+      await FirebaseMessaging.instance.subscribeToTopic("all");
     }
   });
-  await FirebaseMessaging.instance.subscribeToTopic("all");
+  FlutterHmsGmsAvailability.isHmsAvailable.then((t) async {
+    print(t?"hms":"gms");
+    if(t){
+      await Push.setAutoInitEnabled(true);
+      Push.onMessageReceivedStream.listen((e)=>_onMessageReceived(e,flutterLocalNotificationsPlugin) , onError: _onMessageReceiveError);
+      await Push.registerBackgroundMessageHandler((e)=>backgroundMessageCallback(e,flutterLocalNotificationsPlugin));
+      await Push.getId().then((value) => print("HMS HMS "+ value!));
+    }
+  });
   await Future.delayed(Duration(seconds: 4,milliseconds: 500));
   return true;
 }

@@ -23,12 +23,6 @@ class OnBoard extends StatelessWidget {
               if(snapshot.data!=null){
                 PackageInfo.fromPlatform().then((valuee) {
                   if(snapshot.data?.data[0]['version']==valuee.version){
-                    FlutterHmsGmsAvailability.isGmsAvailable.then((t) {
-                     print(t?"gms":"hms");
-                    });
-                    FlutterHmsGmsAvailability.isHmsAvailable.then((t) {
-                      print(t?"hms":"gms");
-                    });
                   }else{
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Version(link:snapshot.data?.data[0]['link'])), (route) => false);
                   }
