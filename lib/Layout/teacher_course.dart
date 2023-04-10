@@ -5,6 +5,7 @@ import 'package:dirasti/module/teacher_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../module/subject_module.dart';
 import 'all_file.dart';
@@ -15,6 +16,7 @@ class TeacherCourse extends StatelessWidget {
 final type;
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
       create: (context) => MainBloc()..add(get_teatcher_event(subject.id,subject.grade)),
       child: BlocConsumer<MainBloc, MainState>(

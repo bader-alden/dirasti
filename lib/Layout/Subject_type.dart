@@ -4,6 +4,7 @@ import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/main/main_bloc.dart';
 
@@ -13,6 +14,7 @@ class Subject_type extends StatelessWidget {
   final subject_module subject;
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return
       Hero(
         tag: hero.toString(),

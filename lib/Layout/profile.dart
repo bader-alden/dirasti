@@ -4,6 +4,7 @@ import 'package:dirasti/Layout/signin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/main/main_bloc.dart';
 import '../main.dart';
@@ -19,6 +20,7 @@ class Profile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     var _tab_con = useTabController(initialLength: 2, initialIndex: 1);
     return BlocProvider(
       create: (context) => MainBloc()..add(init_porfile1())..add(init_porfile2(_tab_con.index)),

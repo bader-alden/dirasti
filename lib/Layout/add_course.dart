@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/copon/copon_bloc.dart';
 import 'scan_page.dart';
@@ -26,7 +27,7 @@ class AddCourse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
       create: (context) => CoponBloc(),
       child: BlocConsumer<CoponBloc, CoponState>(

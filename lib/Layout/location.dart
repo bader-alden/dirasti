@@ -1,6 +1,7 @@
 import 'package:dirasti/utils/const.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:map_launcher/map_launcher.dart';
 List list_location = [] ;
 class Location extends StatefulWidget {
@@ -26,6 +27,7 @@ dio.get_data(url: "/data/Coupon_points_of_sale",).then((value) {
   }
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: appbar_back("أماكن بيع أكواد التفعيل"),
       body: list_location.isEmpty

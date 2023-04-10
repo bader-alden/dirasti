@@ -16,6 +16,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hms_gms_availability/flutter_hms_gms_availability.dart';
+import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:huawei_push/huawei_push.dart' hide  RemoteMessage , Importance ;
 import 'package:huawei_push/huawei_push.dart' as huawi show  RemoteMessage   ;
@@ -29,6 +30,8 @@ import 'Layout/setting.dart';
 import 'dart:convert';
 import './utils/cache.dart';
 import 'firebase_options.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
  void backgroundMessageCallback(huawi.RemoteMessage remoteMessage,flutterLocalNotificationsPlugin) async {
 String? data = remoteMessage.data;
 
@@ -113,7 +116,8 @@ void _onMessageReceived(huawi.RemoteMessage remoteMessage,flutterLocalNotificati
 }
 main() async {
 
- // await futer();
+
+    // await futer();
  //   const platform = MethodChannel('samples.flutter.dev/battery');
  // // try {
  //      platform.invokeMethod('add');
@@ -189,7 +193,8 @@ class App extends StatelessWidget {
                  color: Color.fromARGB(255, 221, 221, 231),
                  child: Image.asset("assets/sc.gif", fit: BoxFit.fitHeight,));
            } else {
-             return MaterialApp(
+             if(snapshot.data != null && snapshot.data==true) {
+               return MaterialApp(
                title: "دراستي",
                theme: ThemeData(fontFamily: "cairo"),
                useInheritedMediaQuery: true,
@@ -251,6 +256,10 @@ class App extends StatelessWidget {
                  ),
                ),
              );
+             }
+             else{
+               return Container();
+             }
           }
          }
        );
@@ -320,6 +329,15 @@ futer() async {
          });
     }
   });
+
+
   await Future.delayed(Duration(seconds: 4,milliseconds: 500));
-  return true;
+  var info = await DeviceInfoPlugin().androidInfo;
+  var is_dev =  await FlutterJailbreakDetection.developerMode;
+  var is_jill =  await FlutterJailbreakDetection.jailbroken;
+  if(info.isPhysicalDevice && is_dev &&!is_jill){
+    return true;
+  }else {
+    return false;
+  }
 }

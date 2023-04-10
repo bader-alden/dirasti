@@ -2,6 +2,7 @@ import 'package:container_tab_indicator/container_tab_indicator.dart';
 import 'package:dirasti/utils/cache.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../module/noti_module.dart';
 import '../utils/const.dart';
@@ -37,6 +38,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
   }
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

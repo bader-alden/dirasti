@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dirasti/utils/dio.dart';
 import '../Bloc/user/user_bloc.dart';
@@ -13,6 +14,7 @@ class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     bool _is_loading = false;
     return Scaffold(
       body: BlocProvider(

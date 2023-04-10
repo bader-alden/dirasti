@@ -6,6 +6,7 @@ import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hms_gms_availability/flutter_hms_gms_availability.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../Bloc/user/user_bloc.dart';
@@ -15,6 +16,7 @@ class OnBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
         body: SafeArea(
           child: FutureBuilder(

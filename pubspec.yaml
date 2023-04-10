@@ -65,7 +65,9 @@ dependencies:
   package_info_plus:
   flutter_hms_gms_availability:
   huawei_push:
-  flutter_dynamic_icon:
+  flutter_windowmanager:
+  device_info_plus:
+  flutter_jailbreak_detection:
 
 dev_dependencies:
   flutter_test:

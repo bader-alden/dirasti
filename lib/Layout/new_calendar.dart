@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 import '../Bloc/calendar/calendar_bloc.dart';
@@ -44,6 +45,7 @@ class _NewCalendarState extends State<NewCalendar> {
   }
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     bool _is_check = false;
     return BlocProvider(
   create: (context) => CalendarBloc()..add(init_event("1/1")),

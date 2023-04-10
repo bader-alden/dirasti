@@ -5,6 +5,7 @@ import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/main/main_bloc.dart';
 import '../Bloc/user/user_bloc.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
   create: (context) => MainBloc()..check_version()..add(init()),
   child: BlocConsumer<MainBloc, MainState>(
@@ -72,7 +74,8 @@ class HomePage extends StatelessWidget {
             Expanded(child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35),
               child: context.read<MainBloc>().subject_list.length == 0 ?
-                  Center(child: CircularProgressIndicator(color: blue,))
+                  //Center(child: CircularProgressIndicator(color: blue,))
+              Center(child: Image.asset("assets/loading.gif",width: 75,))
                   :GridView.builder(
                 physics: BouncingScrollPhysics(),
                 itemCount: context.read<MainBloc>().subject_list.length,

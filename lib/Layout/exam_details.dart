@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import '../Bloc/exam/exam_bloc.dart';
 DateTime?  times ;
 CountdownTimerController? timer_con;
@@ -17,6 +18,7 @@ class ExamDetails extends StatelessWidget {
   final subject_module subject;
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     if(times == null ){
       times = DateTime.now();
      timer_con  = CountdownTimerController(endTime: times!.add(Duration(seconds:int.parse(exam['time']) )).microsecondsSinceEpoch ~/ 1000);

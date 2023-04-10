@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import '../Bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../Bloc/main/main_bloc.dart';
 import '../main.dart';
@@ -76,6 +77,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
   }
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return WillPopScope(
       onWillPop: () async {
         is_video_play=false;

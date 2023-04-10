@@ -1,6 +1,7 @@
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:dirasti/utils/dio.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:url_launcher/url_launcher.dart';
 List list_social = [];
 class Social extends StatefulWidget {
@@ -25,6 +26,7 @@ class _SocialState extends State<Social> {
   }
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: appbar_back("التواصل الاجتماعي"),
       body: list_social.isEmpty

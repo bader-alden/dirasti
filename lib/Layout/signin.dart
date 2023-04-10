@@ -4,11 +4,15 @@ import 'package:dirasti/module/user_module.dart';
 import 'package:dirasti/utils/cache.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../Bloc/user/user_bloc.dart';
 import '../Bloc/user/user_bloc.dart';
+import 'package:dirasti/utils/dio.dart';
 
 var _number_con = TextEditingController();
 var _name_con = TextEditingController();
@@ -24,6 +28,7 @@ class Signin extends StatelessWidget {
   final user_module? data;
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     var is_loadin = false;
     if (!init && type == "edit") {
       init = true;
@@ -243,6 +248,24 @@ class Signin extends StatelessWidget {
                             }),
                           SizedBox(
                             height: 10,
+                          ),
+                          if (type != "edit")
+                          StatefulBuilder(
+                              builder: (context,setstatea) {
+                                return Row(
+                                  children: [
+                                    Spacer(),
+                                    TextButton(onPressed: (){
+                                      showCupertinoDialog(context: context, builder: (context)=>Center(child: Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),width: 75,height: 75,child: Center(child: CircularProgressIndicator(color: blue,),),),));
+                                      dio.get_data(url: "/data/the_support").then((value) {
+                                        Navigator.pop(context);
+                                        launchUrl(Uri.parse(value?.data[0]["link"]),mode:LaunchMode.externalNonBrowserApplication );
+                                      });
+                                    }, child: Text("الدعم الفني",style: TextStyle(fontSize: 15))),
+                                    Text("التواصل مع ",style: TextStyle(fontSize: 15)),
+                                  ],
+                                );
+                              }
                           ),
                           if (type == "edit")
                             StatefulBuilder(builder: (context, statee) {

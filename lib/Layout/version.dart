@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../utils/const.dart';
@@ -8,6 +9,7 @@ class Version extends StatelessWidget {
 final link;
   @override
   Widget build(BuildContext context) {
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       body: Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

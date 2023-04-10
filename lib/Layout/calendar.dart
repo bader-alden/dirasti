@@ -5,6 +5,7 @@ import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -31,7 +32,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
   create: (context) => CalendarBloc()..add(init_event((DateTime.now().month-1).toString()+"/"+(DateTime.now().day-1).toString())),
   child: BlocConsumer<CalendarBloc, CalendarState>(

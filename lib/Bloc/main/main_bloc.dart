@@ -6,7 +6,6 @@ import 'package:dirasti/module/part_module.dart';
 import 'package:dirasti/module/subject_module.dart';
 import 'package:dirasti/utils/cache.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 import 'package:meta/meta.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:package_info_plus/package_info_plus.dart';
