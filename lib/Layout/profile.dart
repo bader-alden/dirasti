@@ -99,7 +99,7 @@ class Profile extends HookWidget {
                     child: Column(
                       children: [
                         Spacer(),
-                        Center(child: CircularProgressIndicator()),
+                        Center(child: Image.asset("assets/loading.gif",width: 75,)),
                         Spacer()
                       ],
                     ),
@@ -257,7 +257,7 @@ class Profile extends HookWidget {
                             ],
                           ),
                         )
-                            :CircularProgressIndicator(color:blue,)),
+                            : Center(child: Image.asset("assets/loading.gif",width: 75,)))
                   );
                 },
               ),

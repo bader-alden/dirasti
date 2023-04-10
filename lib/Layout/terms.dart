@@ -26,7 +26,7 @@ class _TermsState extends State<Terms> {
     return Scaffold(
       appBar: appbar_back("سياسة الخصوصية و الاستخدام"),
       body: _terms ==""
-            ?Center(child: CircularProgressIndicator())
+            ? Center(child: Image.asset("assets/loading.gif",width: 75,))
             :SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(padding: EdgeInsets.all(8),width: double.infinity,child: Text(_terms,style: TextStyle(fontSize: 16),textDirection: TextDirection.rtl)),

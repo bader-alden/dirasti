@@ -256,7 +256,7 @@ class Signin extends StatelessWidget {
                                   children: [
                                     Spacer(),
                                     TextButton(onPressed: (){
-                                      showCupertinoDialog(context: context, builder: (context)=>Center(child: Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),width: 75,height: 75,child: Center(child: CircularProgressIndicator(color: blue,),),),));
+                                      showCupertinoDialog(context: context, builder: (context)=>Center(child: Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),width: 75,height: 75,child: Center(child: Image.asset("assets/loading.gif",width: 75,)),),));
                                       dio.get_data(url: "/data/the_support").then((value) {
                                         Navigator.pop(context);
                                         launchUrl(Uri.parse(value?.data[0]["link"]),mode:LaunchMode.externalNonBrowserApplication );

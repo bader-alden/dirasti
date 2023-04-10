@@ -117,7 +117,7 @@ class AllFile extends StatelessWidget {
                             ],
                           ),
                         )
-                            :CircularProgressIndicator(color:blue,)),
+                            : Center(child: Image.asset("assets/loading.gif",width: 75,)))
                   );
                 },
               ),

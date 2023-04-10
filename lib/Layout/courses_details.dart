@@ -122,7 +122,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
               future: setupData(context),
               builder: (context,snapshot) {
                 if(snapshot.connectionState == ConnectionState.waiting||snapshot.data==null){
-                  return CircularProgressIndicator();
+                  return  Center(child: Image.asset("assets/loading.gif",width: 75,));
                 }else {
                   return BetterPlayerPlaylist(
                   key: _betterPlayerPlaylistStateKey,

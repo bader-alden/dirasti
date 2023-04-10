@@ -30,6 +30,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
 
   Future<FutureOr<void>> signin(user_signin event, Emitter<UserState> emit) async {
+    try{
     FlutterHmsGmsAvailability.isGmsAvailable.then((t) async {
       if (t) {
         await FirebaseMessaging.instance.getToken().then((valued) async {
@@ -53,7 +54,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           });
         });
       }else{
-        await Push.getId().then((valued) async {
+        await Push.getTokenStream.listen((valued) async {
           await dio.post_data(url: "/account/signin", quary: {
             "name": event.name,
             //"email": event.email,
@@ -76,7 +77,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
 
     });
-
+    }catch(e){
+      await dio.post_data(url: "/account/signin", quary: {
+        "name": event.name,
+        //"email": event.email,
+        "is_male": event.is_male,
+        "grade": event.grade,
+        "mobile_id": event.mobile_id,
+        "secret_code": cache.get_data("scode"),
+        "gsm_token2":"empty",
+        "gsm_token":"empty",
+        "is_gms": '1',
+      }).then((value) {
+        if (value?.data == "error3") {
+          emit(error_signin("مكرر"));
+        } else {
+          cache.save_data("id", value?.data);
+          emit(scss_signin());
+        }
+      });
+    }
     //`name`, `email`, `is_male`, `course_file`,`grade`,`mobile_id`,`secret_code`
   }
 
@@ -87,7 +107,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       value?.data.forEach((e){
           grade_modules.add(grade_module.fromjson(e));
           //grade_modules.add(e);
-
 
         });
 
@@ -100,6 +119,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
 
   Future<FutureOr<void>> login(user_login event, Emitter<UserState> emit) async {
+    try{
     await FlutterHmsGmsAvailability.isGmsAvailable.then((t) async {
       if (t) {
         await FirebaseMessaging.instance.getToken().then((valued) async {
@@ -141,8 +161,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         });
       }
       });
-
-
+    }
+    catch(e){
+      await dio.post_data(url: "/account/login", quary: {
+        "mobile_id": event.num,
+        "secret_code": cache.get_data("scode"),
+        "gsm_token2":"empty",
+        "gsm_token":"empty",
+      }).then((value) {
+        if (value?.data == "error1") {
+          emit(error_login("تم تسجيل الدخول من جوال اخر"));
+        } else if (value?.data == "error2") {
+          emit(error_login("غير موجود"));
+        } else {
+          user_model = user_module.fromjson(value?.data[0]);
+          cache.save_data("id", user_model?.id);
+          emit(scss_login(user_model?.name));
+        }
+      });
+    }
 
   //  });
 

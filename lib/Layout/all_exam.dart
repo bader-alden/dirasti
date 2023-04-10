@@ -30,7 +30,7 @@ class AllExam extends StatelessWidget {
                 banner_widget(subject.exam_banner!),
                 SizedBox(height: 20),
                 if(context.read<MainBloc>().all_exam_list.isEmpty)
-                  Expanded(child: Center(child: CircularProgressIndicator(),))
+                  Expanded(child:  Center(child: Image.asset("assets/loading.gif",width: 75,)))
                   else
                 Expanded(child: ListView.builder(
                     physics: BouncingScrollPhysics(),

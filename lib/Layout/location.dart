@@ -31,7 +31,7 @@ dio.get_data(url: "/data/Coupon_points_of_sale",).then((value) {
     return Scaffold(
       appBar: appbar_back("أماكن بيع أكواد التفعيل"),
       body: list_location.isEmpty
-            ?Center(child: CircularProgressIndicator())
+            ? Center(child: Image.asset("assets/loading.gif",width: 75,))
             :ListView.builder(
         itemCount: list_location.length,
           physics: BouncingScrollPhysics(),itemBuilder: (context,index){

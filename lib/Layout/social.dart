@@ -30,7 +30,7 @@ class _SocialState extends State<Social> {
     return Scaffold(
       appBar: appbar_back("التواصل الاجتماعي"),
       body: list_social.isEmpty
-        ?Center(child: CircularProgressIndicator(),)
+        ? Center(child: Image.asset("assets/loading.gif",width: 75,))
         :ListView.builder(
           physics: BouncingScrollPhysics(),
           itemCount: list_social.length,

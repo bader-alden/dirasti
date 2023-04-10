@@ -104,7 +104,7 @@ class ExamDetails extends StatelessWidget {
                         color: Colors.white,
                         height: double.infinity,
                         width: double.infinity,
-                        child: Center(child: SizedBox(width: 50, height: 50, child: CircularProgressIndicator())),
+                        child: Center(child: SizedBox(width: 50, height: 50, child:  Center(child: Image.asset("assets/loading.gif",width: 75,)))),
                       )
                     else
                       ListView(

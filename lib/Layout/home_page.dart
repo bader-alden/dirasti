@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
             if(context.read<MainBloc>().main_banner_image !="")
             banner_widget(context.read<MainBloc>().main_banner_image)
             else
-              Container(height: 200,child: Center(child: CircularProgressIndicator(color: blue,)),),
+              Container(height: 200,child:  Center(child: Image.asset("assets/loading.gif",width: 75,))),
             SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -335,7 +335,7 @@ futer() async {
   var info = await DeviceInfoPlugin().androidInfo;
   var is_dev =  await FlutterJailbreakDetection.developerMode;
   var is_jill =  await FlutterJailbreakDetection.jailbroken;
-  if(info.isPhysicalDevice && is_dev &&!is_jill){
+  if(info.isPhysicalDevice && !is_dev &&!is_jill){
     return true;
   }else {
     return false;
