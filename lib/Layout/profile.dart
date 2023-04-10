@@ -13,8 +13,9 @@ import 'courses_details.dart';
 int v =75;
 
 class Profile extends HookWidget {
-  const Profile(this.user_name, {Key? key}) : super(key: key);
+  const Profile(this.user_name, this.is_male, {Key? key}) : super(key: key);
   final user_name;
+  final is_male;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,10 @@ class Profile extends HookWidget {
             body: Column(
               children: [
                 SizedBox(height: 40,),
-                Center(child: Hero(tag: "porfile", child: Material(color: Colors.transparent, child: Image.asset("assets/avatar.png", height: 120)))),
+                Center(child: Hero(tag: "porfile", child: Material(color: Colors.transparent, child: Image.asset((context
+                    .read<MainBloc>()
+                    .user_model
+                    ?.is_male ?? is_male)?"assets/avatar1.png" : "assets/avatar.png", height: 120)))),
                 SizedBox(height: 10,),
                 Row(
                   children: [
@@ -47,11 +51,17 @@ class Profile extends HookWidget {
                                 .read<MainBloc>()
                                 .user_model
                                 ?.name ?? user_name), style: TextStyle(backgroundColor: Colors.transparent, fontSize: 22),))),
+
                     SizedBox(width: 60,),
                     Spacer(),
                   ],
                 ),
-                SizedBox(height: 30,),
+                if(context.read<MainBloc>().user_model?.mobile_id!=null)
+                Text("09"+(context
+                    .read<MainBloc>()
+                    .user_model
+                    ?.mobile_id??""), style: TextStyle( fontSize: 20,color: Colors.grey),),
+                SizedBox(height: 10,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   child: Container(
@@ -162,7 +172,7 @@ class Profile extends HookWidget {
                       children: [
                         Container(child: FilledButton(onPressed: (){
                          Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
-                        }, child: Text("عرض نفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
+                        }, child: Text("عرض تفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
                         Spacer(),
                       ],
                     ),

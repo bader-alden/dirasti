@@ -6,6 +6,7 @@ import 'package:dirasti/Bloc/bottom_nav/bottom_nav_bloc.dart';
 import 'package:dirasti/Bloc/user/user_bloc.dart';
 import 'package:dirasti/Layout/add_course.dart';
 import 'package:dirasti/Layout/notification_page.dart';
+import 'package:dirasti/test.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:dirasti/utils/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -232,6 +233,7 @@ class App extends StatelessWidget {
                          },
                        ),
                        body: PageView(
+                         physics: BouncingScrollPhysics(),
                          onPageChanged: (index) {
                            context.read<BottomNavBloc>().change_index(index);
                          },
@@ -306,15 +308,16 @@ futer() async {
     if(t){
       await Push.setAutoInitEnabled(true);
       Push.onMessageReceivedStream.listen((e)=>_onMessageReceived(e,flutterLocalNotificationsPlugin) , onError: _onMessageReceiveError);
-      //await Push.registerBackgroundMessageHandler((e)=>backgroundMessageCallback(e,flutterLocalNotificationsPlugin));
-      await Push.getId().then((value) => print("HMS HMS "+ value!));
-      Push.getToken("bader");
-        Push.getTokenStream.listen((event) {
-          print("=="*10);
-          print(event);
-          print("=="*10);
-        });
-
+    await Push.registerBackgroundMessageHandler((e)=>backgroundMessageCallback(e,flutterLocalNotificationsPlugin));
+       await Push.getId().then((value) => print("HMS HMS "+ value!));
+       Push.getToken("bader");
+       print("=="*10);
+         Push.getTokenStream.listen((event) {
+           print("=="*10);
+           Tost(event, Colors.green);
+           print(event);
+           print("=="*10);
+         });
     }
   });
   await Future.delayed(Duration(seconds: 4,milliseconds: 500));

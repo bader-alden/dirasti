@@ -100,7 +100,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
 
   Future<FutureOr<void>> login(user_login event, Emitter<UserState> emit) async {
-    FlutterHmsGmsAvailability.isGmsAvailable.then((t) async {
+    await FlutterHmsGmsAvailability.isGmsAvailable.then((t) async {
       if (t) {
         await FirebaseMessaging.instance.getToken().then((valued) async {
           await dio.post_data(url: "/account/login", quary: {
@@ -121,12 +121,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           });
         });
       }else{
-        await Push.getId().then((valued) async {
+        Push.getTokenStream.listen((events) async {
           await dio.post_data(url: "/account/login", quary: {
             "mobile_id": event.num,
             "secret_code": cache.get_data("scode"),
             // "gsm_token2":valued?.split(":")[1],
-             "gsm_token":valued,
+             "gsm_token":events,
           }).then((value) {
             if (value?.data == "error1") {
               emit(error_login("تم تسجيل الدخول من جوال اخر"));

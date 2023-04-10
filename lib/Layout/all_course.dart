@@ -106,7 +106,7 @@ final teacher_module teacher;
                       children: [
                         Container(child: FilledButton(onPressed: (){
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
-                        }, child: Text("عرض نفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
+                        }, child: Text("عرض تفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
                         Spacer(),
                       ],
                     ),

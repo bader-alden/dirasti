@@ -33,11 +33,12 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 0,),
             Row(children: [
               SizedBox(width: 15,),
+              if(context.read<MainBloc>().user_model?.is_male!=null)
               InkWell(onTap:  ()
                   async {
-                   await Navigator.push(context, MaterialPageRoute(builder: (contexta)=>Profile(context.read<MainBloc>().user_model?.name??"")));
+                   await Navigator.push(context, MaterialPageRoute(builder: (contexta)=>Profile(context.read<MainBloc>().user_model?.name??"",context.read<MainBloc>().user_model?.is_male??"")));
                   context.read<MainBloc>().add(init());
-                  },child: Hero(tag: "porfile",child: Material(color: Colors.transparent,child: Image.asset("assets/avatar.png",height: 60)))),
+                  },child: Hero(tag: "porfile",child: Material(color: Colors.transparent,child: Image.asset(context.read<MainBloc>().user_model!.is_male! ?"assets/avatar1.png" : "assets/avatar.png",height: 60)))),
 
               Spacer(),
               Column(
@@ -115,7 +116,7 @@ home_page_grade_item(BuildContext context, int index,subject_module model) {
               Image.network(model!.photo!,height: 65,),
               //Icon(Icons.bolt_outlined,size: 50,),
               SizedBox(height: 20,),
-              Text(model!.subject!)
+              Text(model!.subject!,style: TextStyle(fontWeight: FontWeight.bold),)
             ],
           ),
         ),
