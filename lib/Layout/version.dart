@@ -9,7 +9,7 @@ class Version extends StatelessWidget {
 final link;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       body: Center(child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -24,7 +24,6 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   @override
   void initState() {
-    // TODO: implement initState
     _month_con=TabController(length:12,vsync: this,initialIndex: DateTime.now().month-1);
     number_of_day =  check_number_day(DateTime.now().month);
     _day_con=TabController(length:number_of_day,vsync: this, initialIndex: DateTime.now().day-1);
@@ -32,7 +31,7 @@ class _CalendarState extends State<Calendar> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
   create: (context) => CalendarBloc()..add(init_event((DateTime.now().month-1).toString()+"/"+(DateTime.now().day-1).toString())),
   child: BlocConsumer<CalendarBloc, CalendarState>(

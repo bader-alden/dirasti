@@ -18,7 +18,6 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> with SingleTickerProviderStateMixin {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tab_con = TabController(length: 2, vsync: this);
     dio.get_data(url: "/notices",quary: {"user_id":cache.get_data("id")}).then((value) {
@@ -32,13 +31,12 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
   }
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _noti_list.clear();
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

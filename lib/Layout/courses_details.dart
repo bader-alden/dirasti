@@ -9,6 +9,7 @@ import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:uuid/uuid.dart';
 import '../Bloc/bottom_nav/bottom_nav_bloc.dart';
 import '../Bloc/main/main_bloc.dart';
 import '../main.dart';
@@ -27,6 +28,7 @@ final GlobalKey<BetterPlayerPlaylistState> _betterPlayerPlaylistStateKey =
 GlobalKey();
 List<BetterPlayerDataSource> _dataSourceList = [];
 late BetterPlayerConfiguration _betterPlayerConfiguration;
+bool isVideoInit = false  ;
 late BetterPlayerPlaylistConfiguration _betterPlayerPlaylistConfiguration;
 // List test_list_video = ["الاولى", "الثاتية", "الثالثة", "الرابعة", "الاولaى", "الثaاتية", "الثالaثة", "الaرابعة"];
 
@@ -43,9 +45,10 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
 
   _CoursesDetailsState( this.course) {
     _betterPlayerConfiguration = BetterPlayerConfiguration(
-      fit: BoxFit.cover,
       autoPlay: true,
       looping: false,
+      aspectRatio:16/9 ,
+      fit: BoxFit.fitHeight,
       showPlaceholderUntilPlay: true,
       deviceOrientationsAfterFullScreen: [
         DeviceOrientation.portraitUp,
@@ -55,21 +58,24 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
     _betterPlayerPlaylistConfiguration = BetterPlayerPlaylistConfiguration(
     //  loopVideos: true,
       nextVideoDelay: Duration(seconds: 3),
-    );}
+    );
+
+  }
   // _CoursesDetailsState(this.subject, this.teacher, this.course);
   @override
   void initState() {
     super.initState();
     not_buy = true;
+    isVideoInit = true;
     tab_con = TabController(length: 2, vsync: this, initialIndex: 1);
     //video_tab_con = TabController(length: test_list_video.length, vsync: this, initialIndex: test_list_video.length - 1);
     page_con = PageController(initialPage: 1);
   }
 @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     is_video_play=false;
+    isVideoInit=false;
     _betterPlayerPlaylistController?.betterPlayerController?.videoPlayerController?.dispose();
     _betterPlayerPlaylistController?.dispose();
     _betterPlayerPlaylistController?.betterPlayerController?.dispose(forceDispose: true);
@@ -77,7 +83,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return WillPopScope(
       onWillPop: () async {
         is_video_play=false;
@@ -121,14 +127,14 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
             FutureBuilder<List<BetterPlayerDataSource>>(
               future: setupData(context),
               builder: (context,snapshot) {
-                if(snapshot.connectionState == ConnectionState.waiting||snapshot.data==null){
+                if(snapshot.connectionState == ConnectionState.waiting ||snapshot.data==null){
                   return  Center(child: Image.asset("assets/loading.gif",width: 75,));
                 }else {
+                  isVideoInit = true;
                   return BetterPlayerPlaylist(
                   key: _betterPlayerPlaylistStateKey,
                   betterPlayerConfiguration: _betterPlayerConfiguration,
-                  betterPlayerPlaylistConfiguration:
-                  _betterPlayerPlaylistConfiguration,
+                  betterPlayerPlaylistConfiguration: _betterPlayerPlaylistConfiguration,
                   betterPlayerDataSourceList: snapshot.data!,
                 );
                 }
@@ -191,7 +197,7 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
                                     tab_con?.animateTo(index);
                                   },
                                   children: [
-                                    course_details_page_2(context, sets,_betterPlayerPlaylistController),
+                                    course_details_page_2(context, sets,_betterPlayerPlaylistController,course),
                                     course_details_page_1(context, course, state),
                                   ],
                                 ))
@@ -218,7 +224,8 @@ class _CoursesDetailsState extends State<CoursesDetails> with TickerProviderStat
         _dataSourceList.add(
           BetterPlayerDataSource(
               BetterPlayerDataSourceType.network,
-              element.res!.values.first,
+              // element.res!.values.first,
+              element.res!.values.toList()[1],
                resolutions: element.res?.map((key, value) => MapEntry(key, value.toString()))
           ),
         );
@@ -321,8 +328,8 @@ Widget course_details_page_1(context, course_module course, state) {
           Builder(
             builder: (context) {
               return BlocProvider(
-  create: (context) => MainBloc(),
-  child: InkWell(
+                  create: (context) => MainBloc(),
+                  child: InkWell(
                   onTap: () {
                     page_con?.animateTo(0, duration: Duration(milliseconds: 300), curve: Curves.linear);
                     tab_con?.animateTo(0);
@@ -358,7 +365,7 @@ Widget course_details_page_1(context, course_module course, state) {
   );
 }
 
-Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylistController) {
+Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylistController ,course) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
     child: Column(
@@ -384,7 +391,7 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
                   (e) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Container(
-                        width: 80,
+                       // width: 80,
                         decoration: BoxDecoration(border: Border.all(), borderRadius: BorderRadius.circular(10)),
                         padding: EdgeInsets.all(4),
                         child: Center(
@@ -418,7 +425,7 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
                     physics: BouncingScrollPhysics(),
                     itemCount: context.read<MainBloc>().part_list[video_tab_con!.index].part?.length,
                     itemBuilder: (context, index) {
-                      return tab_part_item(context ,index,context.read<MainBloc>().part_list[video_tab_con!.index].part![index],setstat);
+                      return tab_part_item(context ,index,context.read<MainBloc>().part_list[video_tab_con!.index].part![index],setstat,course);
                     });
               }
             ))
@@ -427,15 +434,46 @@ Widget course_details_page_2(BuildContext context, setstate,_betterPlayerPlaylis
   );
 }
 
-Widget tab_part_item(BuildContext context, int index,part_detail_module model,setstate) {
+Widget tab_part_item(BuildContext context, int index,part_detail_module model,setstate , course_module course) {
+ var nameModel = context.read<MainBloc>().part_list[video_tab_con!.index];
+
+  var logsName = "1|${course.id}|${nameModel.id}|${model.name}";
+//  var logsName =Uuid().v4();
+  // 1|3|10|14|16
   _betterPlayerPlaylistController?.betterPlayerController?.addEventsListener((p0) {
+    Duration? currentPosition = _betterPlayerPlaylistController?.betterPlayerController?.videoPlayerController!.value.position;
+    Duration? currentDuration = _betterPlayerPlaylistController?.betterPlayerController?.videoPlayerController!.value.duration;
+    int? currentPositionInSeconds = currentPosition?.inSeconds;
+    if(currentDuration?.inSeconds == currentPositionInSeconds){
+      if(context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index &&
+                context.read<MainBloc>().video_index_map[video_tab_con?.index]!.contains(_betterPlayerPlaylistController?.currentDataSourceIndex)){
+                  print("end the video");
+      context.read<MainBloc>().add(logs_event(logsName));
+      setstate((){});
+                }else{
+                  print("=-----=");
+                  print(context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0));
+                  print(index);
+                  print(context.read<MainBloc>().video_index_map[video_tab_con?.index]!);
+                  print(_betterPlayerPlaylistController?.currentDataSourceIndex);
+                  print("=-----=");
+                }
+      
+    }
     if(_betterPlayerPlaylistController?.betterPlayerController?.isBuffering()??false){
+
       _betterPlayerPlaylistController?.betterPlayerController?.videoPlayerController?.position.then((value) {
+
         if(value!.inSeconds == 0){
+
           setstate((){});
 
+        }else{
+         // print(value.inSecond );
         }
       });
+    }else{
+
     }
   });
 
@@ -443,6 +481,14 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
   return InkWell(
     borderRadius: BorderRadius.circular(10),
     onTap: () {
+      // print("=======");
+      //     print(_betterPlayerPlaylistController?.currentDataSourceIndex);
+      //     print(index);
+      //     print(video_tab_con?.index);
+      //     print(part);
+      //     context.read<MainBloc>().logs_list.forEach((element) {print(element);});
+      //     print(context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index &&
+      //           context.read<MainBloc>().video_index_map[video_tab_con?.index]!.contains(_betterPlayerPlaylistController?.currentDataSourceIndex));
       if(is_video_play && _betterPlayerPlaylistController?.currentDataSourceIndex ==index&&video_tab_con?.index==part){
         if( _betterPlayerPlaylistController!.betterPlayerController!.isPlaying()!){
           _betterPlayerPlaylistController?.betterPlayerController?.pause();
@@ -453,6 +499,7 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
       }
       else if(video_tab_con?.index!=part&& is_video_play){
        // Tost("change tab", Colors.red);
+
         _betterPlayerPlaylistController?.setupDataSource(context.read<MainBloc>().video_index_map[video_tab_con?.index]![index]);
         setstate((){});
       }
@@ -463,6 +510,7 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
         _betterPlayerPlaylistController?.setupDataSource(index);
         setstate((){});
       }else{
+
         // setstate((){});
         //     context.read<MainBloc>().add(watch_event(video_tab_con?.index));
       }
@@ -496,12 +544,14 @@ Widget tab_part_item(BuildContext context, int index,part_detail_module model,se
             //  SizedBox(height: 75,width: 75,child: Center(child: Text((index+1).toString(),style: TextStyle(fontSize: 30),)),)
             Container(
               decoration: BoxDecoration(color:
-
               context.read<MainBloc>().video_index_map[video_tab_con?.index]!.indexOf(_betterPlayerPlaylistController?.currentDataSourceIndex??0) == index
                   &&
                   context.read<MainBloc>().video_index_map[video_tab_con?.index]!.contains(_betterPlayerPlaylistController?.currentDataSourceIndex)
-
-                  ? orange : blue, borderRadius: BorderRadius.circular(15)),
+                  ? orange :
+              context.read<MainBloc>().logs_list.contains(logsName)
+                  ?Colors.green
+                  :blue
+                  , borderRadius: BorderRadius.circular(15)),
               height: 75,
               width: 75,
               child: Center(

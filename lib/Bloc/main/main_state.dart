@@ -6,6 +6,7 @@ abstract class MainState {}
 class MainInitial extends MainState {}
 
 class init_state extends MainInitial {}
+class logs_state extends MainInitial {}
 
 class init_porfile_state extends MainInitial {}
 class loading_porfile_state extends MainInitial {}
@@ -23,6 +24,10 @@ class not_match_version extends MainInitial {
   not_match_version(this.link);
 }
 class get_exam_state extends MainInitial {}
+
+class not_sub_exam_state extends MainInitial {}
+class get_exam_link_state extends MainInitial {}
+
 class get_file_link_state extends MainInitial {
   final link ;
 

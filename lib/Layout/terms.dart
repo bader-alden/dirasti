@@ -13,7 +13,6 @@ class Terms extends StatefulWidget {
 class _TermsState extends State<Terms> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     dio.get_data(url:"/data/privacy_policy").then((value){
       _terms = value?.data[0]["text"];
@@ -21,8 +20,8 @@ class _TermsState extends State<Terms> {
     });
   }
   @override
-  Widget build(BuildContext context) {FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-
+  Widget build(BuildContext context) {
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: appbar_back("سياسة الخصوصية و الاستخدام"),
       body: _terms ==""

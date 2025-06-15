@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import '../Bloc/exam/exam_bloc.dart';
 DateTime?  times ;
@@ -18,7 +19,7 @@ class ExamDetails extends StatelessWidget {
   final subject_module subject;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     if(times == null ){
       times = DateTime.now();
      timer_con  = CountdownTimerController(endTime: times!.add(Duration(seconds:int.parse(exam['time']) )).microsecondsSinceEpoch ~/ 1000);
@@ -270,20 +271,27 @@ class ExamDetails extends StatelessWidget {
                                                 ),
                                               ],
                                             ),
-                                            if(context.read<ExamBloc>().all_q[index].photo!=null&& context.read<ExamBloc>().all_q[index].photo!= "null")
-                                              Image.network(context.read<ExamBloc>().all_q[index].photo!),
-                                            Text(
-                                              context.read<ExamBloc>().all_q[index].question!,
-                                              textDirection: TextDirection.rtl,
-                                              style: TextStyle(fontSize: 18),
-                                            ),
+                                            if(context.read<ExamBloc>().all_q[index].photo!=null&& context.read<ExamBloc>().all_q[index].photo!= "null"&&context.read<ExamBloc>().all_q[index].photo!= "")
+                                              Image.network(context.read<ExamBloc>().all_q[index].photo??""),
+
                                             SizedBox(
-                                              height: 5,
+                                              height: 10,
+                                            ),
+                                            Math.tex(context.read<ExamBloc>().all_q[index].question!, mathStyle: MathStyle.display,textStyle: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+
+                                            // Text(
+                                            //   context.read<ExamBloc>().all_q[index].question!,
+                                            //   textDirection: TextDirection.rtl,
+                                            //   style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),
+                                            // ),
+                                            SizedBox(
+                                              height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Spacer(),
-                                                Text(context.read<ExamBloc>().all_q[index].Answer1!),
+                                                Math.tex(context.read<ExamBloc>().all_q[index].Answer1!, mathStyle: MathStyle.display,textStyle: TextStyle(fontSize: 18),),
+                                                // Text(context.read<ExamBloc>().all_q[index].Answer1!),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -297,12 +305,13 @@ class ExamDetails extends StatelessWidget {
                                               ],
                                             ),
                                             SizedBox(
-                                              height: 5,
+                                              height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Spacer(),
-                                                Text(context.read<ExamBloc>().all_q[index].Answer2!),
+                                                // Text(context.read<ExamBloc>().all_q[index].Answer2!),
+                                                Math.tex(context.read<ExamBloc>().all_q[index].Answer2!, mathStyle: MathStyle.display,textStyle: TextStyle(fontSize: 18),),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -316,12 +325,13 @@ class ExamDetails extends StatelessWidget {
                                               ],
                                             ),
                                             SizedBox(
-                                              height: 5,
+                                              height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Spacer(),
-                                                Text(context.read<ExamBloc>().all_q[index].Answer3!),
+                                                Math.tex(context.read<ExamBloc>().all_q[index].Answer3!, mathStyle: MathStyle.display,textStyle: TextStyle(fontSize: 18),),
+                                                // Text(context.read<ExamBloc>().all_q[index].Answer3!),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
@@ -335,12 +345,13 @@ class ExamDetails extends StatelessWidget {
                                               ],
                                             ),
                                             SizedBox(
-                                              height: 5,
+                                              height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Spacer(),
-                                                Text(context.read<ExamBloc>().all_q[index].Answer4!),
+                                                Math.tex(context.read<ExamBloc>().all_q[index].Answer4!, mathStyle: MathStyle.display,textStyle: TextStyle(fontSize: 18),),
+                                                // Text(context.read<ExamBloc>().all_q[index].Answer4!),
                                                 SizedBox(
                                                   width: 5,
                                                 ),

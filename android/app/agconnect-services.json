@@ -33,7 +33,7 @@
 		"project_id":"388421841221397282",
 		"app_id":"108002085",
 		"api_key":"DAEDANQoGchOKen6GP2IGYIL8fFTRxgQelK+AEzc/MWmoor4+3jdXbB186XfbJ78F0gqv7RtRqqSLHLSJIHtRy9tOOBmNmbWl6MT8Q==",
-		"package_name":"com.dirasti.dirasti"
+		"package_name":"com.badr.dirasti"
 	},
 	"oauth_client":{
 		"client_id":"108002085",
@@ -41,7 +41,7 @@
 	},
 	"app_info":{
 		"app_id":"108002085",
-		"package_name":"com.dirasti.dirasti"
+		"package_name":"com.badr.dirasti"
 	},
 	"service":{
 		"analytics":{
@@ -79,12 +79,12 @@
 	"configuration_version":"3.0",
 	"appInfos":[
 		{
-			"package_name":"com.dirasti.dirasti",
+			"package_name":"com.badr.dirasti",
 			"client":{
 				"app_id":"108002085"
 			},
 			"app_info":{
-				"package_name":"com.dirasti.dirasti",
+				"package_name":"com.badr.dirasti",
 				"app_id":"108002085"
 			},
 			"oauth_client":{

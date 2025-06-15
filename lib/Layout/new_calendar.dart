@@ -45,13 +45,12 @@ class _NewCalendarState extends State<NewCalendar> {
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     bool _is_check = false;
     return BlocProvider(
   create: (context) => CalendarBloc()..add(init_event("1/1")),
   child: BlocConsumer<CalendarBloc, CalendarState>(
   listener: (context, state) {
-    // TODO: implement listener
   },
   builder: (context, state) {
     return Scaffold(

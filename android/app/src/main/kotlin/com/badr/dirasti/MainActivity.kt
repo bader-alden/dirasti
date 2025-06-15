@@ -1,4 +1,4 @@
-package com.dirasti.dirasti
+package com.badr.dirasti
 
 import io.flutter.embedding.android.FlutterActivity
 import android.app.AlarmManager
@@ -16,7 +16,6 @@ import androidx.annotation.NonNull
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
-
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -31,6 +30,7 @@ class MainActivity: FlutterActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             println(call.method)
             if (call.method == "add") {
@@ -91,36 +91,4 @@ class MainActivity: FlutterActivity() {
         println( "Alarm scss scss")
        // println(Date());
         Toast.makeText(this, "تمت إضافة التنبيه", Toast.LENGTH_SHORT).show()
-    }
-
-
-//   public  fun noti(){
-//       notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//       val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//           notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
-//           notificationChannel.enableLights(true)
-//           notificationChannel.lightColor = Color.GREEN
-//           notificationChannel.enableVibration(false)
-//           notificationManager.createNotificationChannel(notificationChannel)
-//           builder = Notification.Builder(this, channelId)
-//               // .setContent(contentView)
-//               .setContentText("helo")
-//               .setSmallIcon(R.drawable.app_icon)
-//               .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.app_icon))
-//               .setContentIntent(pendingIntent)
-//       } else {
-//           builder = Notification.Builder(this)
-//               //.setContent("contentView")
-//               .setContentText("helo")
-//               .setSmallIcon(R.drawable.app_icon)
-//               .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.app_icon))
-//               .setContentIntent(pendingIntent)
-//       }
-//       notificationManager.notify(1234, builder.build())
-//    }
-
-
-
-    }
-
+    }    }

@@ -17,7 +17,10 @@ class CoponBloc extends Bloc<CoponEvent, CoponState> {
   }
   Future<FutureOr<void>> serch_copon_void(serch_copon_event event, Emitter<CoponState> emit) async {
     emit(src_loading());
-    await dio.get_data(url: "/copons",quary: {"uid_copon":event.copon,"user_id":cache.get_data("id")}).then((value) {
+    await dio.get_data(url: "/copons",quary: {"uid_copon":event.copon,
+    //  "user_id":cache.get_data("id")
+    }).then((value) {
+      print(value?.data);
       if(value?.data=="notfound"){
         emit(not_found());
       }else if (value?.data=="error10"){
@@ -26,7 +29,6 @@ class CoponBloc extends Bloc<CoponEvent, CoponState> {
         emit(added_before());
       }
         else{
-
         copon_module copon = copon_module.fromjson(value?.data[0]);
         if(copon.is_open!){
           emit(found(copon));
@@ -44,7 +46,9 @@ class CoponBloc extends Bloc<CoponEvent, CoponState> {
 
   Future<FutureOr<void>> add_copon_void(add_state_event event, Emitter<CoponState> emit) async {
     emit(add_loading());
-    await dio.post_data(url: "/copons",quary: {"uid_copon":event.copon,"user_id":cache.get_data("id")}).then((value) {
+    await dio.post_data(url: "/copons",quary: {"uid_copon":event.copon,
+     // "user_id":cache.get_data("id")
+    }).then((value) {
       if(value?.data=="ok"){
         emit(scss());
       }else{

@@ -14,7 +14,7 @@ class Subject_type extends StatelessWidget {
   final subject_module subject;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return
       Hero(
         tag: hero.toString(),
@@ -30,9 +30,9 @@ class Subject_type extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("تريدها",textDirection: TextDirection.rtl,style: TextStyle(color: orange,fontSize: 25,fontWeight: FontWeight.bold)),
+                    Text("تريده",textDirection: TextDirection.rtl,style: TextStyle(color: orange,fontSize: 25,fontWeight: FontWeight.bold)),
                     SizedBox(width: 5,),
-                    Text("اختر المادة التي",textDirection: TextDirection.rtl,style: TextStyle(color: blue,fontSize: 25,fontWeight: FontWeight.bold)),
+                    Text("اختر القسم الذي",textDirection: TextDirection.rtl,style: TextStyle(color: blue,fontSize: 25,fontWeight: FontWeight.bold)),
                     SizedBox(width: 35,),
                   ],
                 ),
@@ -41,7 +41,8 @@ class Subject_type extends StatelessWidget {
               children: [
                 _subject_type_list_item("الكورسات",0,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"course" )))),
                 _subject_type_list_item("الورقيات",1,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"file" )))),
-                _subject_type_list_item("الإختبارات",2,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,)))),
+                // _subject_type_list_item("الإختبارات",2,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,)))),
+                _subject_type_list_item("الإختبارات",2,()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherCourse(subject:subject,type:"exam" )))),
               ],
             )),
                 SizedBox(height: 30,),

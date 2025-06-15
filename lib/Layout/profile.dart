@@ -1,10 +1,12 @@
 import 'package:container_tab_indicator/container_tab_indicator.dart';
 import 'package:dirasti/Layout/pdf.dart';
 import 'package:dirasti/Layout/signin.dart';
+import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../Bloc/main/main_bloc.dart';
 import '../main.dart';
@@ -20,7 +22,7 @@ class Profile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     var _tab_con = useTabController(initialLength: 2, initialIndex: 1);
     return BlocProvider(
       create: (context) => MainBloc()..add(init_porfile1())..add(init_porfile2(_tab_con.index)),
@@ -138,7 +140,7 @@ class Profile extends HookWidget {
   Widget course_item(BuildContext context, int index, course_module model) {
     return Card(
       child: SizedBox(
-        height: 270,
+        height: 220,
         //  width: MediaQuery.of(context).size.width,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,15 +167,37 @@ class Profile extends HookWidget {
                     ],
                   ),
                   SizedBox(height: 10,),
-                  SizedBox(width: MediaQuery.of(context).size.width-200,child: Text(model.des!,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
+                  Row(
+                    children: [
+                      FutureBuilder(future: dio.get_data(url: "/index/one_user_logs",quary: {"course_id":model.id}), builder: ((context, snapshot) {
+                        print(snapshot.data);
+                        if(snapshot.connectionState == ConnectionState.waiting &&snapshot.data==null ){
+                          return SizedBox(width: 15,);
+                         
+                        }else{
+                          return CircularPercentIndicator(
+                            radius: 30.0,
+                            lineWidth: 5.0,
+                            percent: double.parse(snapshot.data.toString()),
+                            center: Text("${(double.parse(snapshot.data.toString())*100).toStringAsFixed(0)}%"),
+                            progressColor: Colors.green,
+                          );
+                        }
+                      })),
+                      SizedBox(width: 20,),
+                      Text(":تمت المشاهدة",style: TextStyle(fontSize: 18),),
+                    ],
+                  ),
+                  //  SizedBox(width: MediaQuery.of(context).size.width-200,child: Text(model.des!,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
                   Spacer(),
                   SizedBox(
                     height: 40,
                     width: MediaQuery.of(context).size.width-200,
                     child: Row(
                       children: [
-                        Container(child: FilledButton(onPressed: (){
-                         Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
+                        Container(child: FilledButton(onPressed: () async {
+                          await Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
+                           context.read<MainBloc>().add(init_porfile2(1));
                         }, child: Text("عرض تفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
                         Spacer(),
                       ],

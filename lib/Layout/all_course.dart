@@ -2,9 +2,11 @@ import 'package:dirasti/Layout/courses_details.dart';
 import 'package:dirasti/module/course_module.dart';
 import 'package:dirasti/module/teacher_module.dart';
 import 'package:dirasti/utils/const.dart';
+import 'package:dirasti/utils/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../Bloc/main/main_bloc.dart';
 import '../module/subject_module.dart';
@@ -15,12 +17,11 @@ class AllCourse extends StatelessWidget {
 final teacher_module teacher;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
   create: (context) => MainBloc()..add(get_course_event(subject.grade,subject.id,teacher.id)),
   child: BlocConsumer<MainBloc, MainState>(
   listener: (context, state) {
-    // TODO: implement listener
   },
   builder: (context, state) {
     return Scaffold(
@@ -64,63 +65,70 @@ final teacher_module teacher;
   }
 
   Widget course_item(BuildContext context, int index, course_module model) {
-    return Card(
-      child: SizedBox(
-        height: 270,
-        //  width: MediaQuery.of(context).size.width,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  SizedBox(height: 10,),
-                  Text(model.name??"اسم الكورس",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
-                  SizedBox(height: 5),
-                  if( model.price=="0")
-                    Text(
-                      "كورس مجاني",
-                      style: TextStyle(color: orange,fontSize: 18),
-                    )
-                  else
-                  Text("السعر "+model.price!,style: TextStyle(color: orange,fontSize: 18)),
-                  SizedBox(height: 5,),
-                  Row(
-                    children: [
-                      Text(" ساعة "),
-                      Text(model.number_hours??"00 "),
-                      Icon(Icons.timelapse),
-                      SizedBox(width: 10,),
-                      Text(" درس "),
-                      Text(model.part??"00"),
-                      Icon(Icons.play_arrow)
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  SizedBox(width: MediaQuery.of(context).size.width-200,child: Text(model.des!,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
-                  Spacer(),
-                  SizedBox(
-                    height: 40,
-                    width: MediaQuery.of(context).size.width-200,
-                    child: Row(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Card(
+        child: SizedBox(
+          height: 300,
+          //  width: MediaQuery.of(context).size.width,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(height:300,width:150,child:Image.network(model.photo!,height: 280,fit: BoxFit.fitHeight,)),
+              SizedBox(width: 15,),
+              Container(
+                width:MediaQuery.of(context).size.width-170 ,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(height: 10,),
+                    Text(model.name??"اسم الكورس",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),maxLines: 2,),
+                    SizedBox(height: 5),
+                      if( model.price=="0")
+                      Text(
+                        "كورس مجاني",
+                        style: TextStyle(color: orange,fontSize: 18),
+                      )
+                    else
+                    Text("السعر "+model.price!,style: TextStyle(color: orange,fontSize: 18)), 
+                    SizedBox(height: 5,),
+                    Row(
                       children: [
-                        Container(child: FilledButton(onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
-                        }, child: Text("عرض تفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
-                        Spacer(),
+                        Text(" ساعة "),
+                        Text(model.number_hours??"00 "),
+                        Icon(Icons.timelapse),
+                        SizedBox(width: 10,),
+                        Text(" درس "),
+                        Text(model.part??"00"),
+                        Icon(Icons.play_arrow)
                       ],
                     ),
-                  ),
-                  SizedBox(height: 20,),
-                ],
+                    SizedBox(height: 10,),
+                    SizedBox(width: MediaQuery.of(context).size.width-200,child: Text(model.des!,textDirection: TextDirection.rtl,overflow: TextOverflow.ellipsis,maxLines: 3,)),
+                    Spacer(),
+                    SizedBox(
+                      height: 40,
+                      width: MediaQuery.of(context).size.width-200,
+                      child: Row(
+                        children: [
+                          Container(child: FilledButton(onPressed: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>CoursesDetails(course: model,)));
+                          }, child: Text("عرض تفاصيل"),style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(blue)),)),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(width: 20,),
-            SizedBox(height:280,width:150,child:Image.network(model.photo!,height: 280,fit: BoxFit.fitHeight,)),
 
-          ],
+
+
+            ],
+          ),
         ),
       ),
     );

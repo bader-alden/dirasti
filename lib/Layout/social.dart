@@ -26,7 +26,7 @@ class _SocialState extends State<Social> {
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: appbar_back("التواصل الاجتماعي"),
       body: list_social.isEmpty

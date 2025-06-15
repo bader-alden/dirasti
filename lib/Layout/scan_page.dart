@@ -32,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:torch_light/torch_light.dart';
 
 
 class ScanPage extends StatefulWidget {
@@ -59,31 +60,75 @@ class _ScanPageState extends State<ScanPage> {
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       body:  Stack(
-        alignment: Alignment.center,
         children: [
-          _buildQrView(context),
-          if(result!=null)
-          Column(
+          Stack(
+            alignment: Alignment.center,
             children: [
-              Spacer(),
-              Spacer(),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  Navigator.pop(context,result?.code);
-                },
-                child: Container(
-                  decoration: BoxDecoration(color: orange,borderRadius: BorderRadius.circular(15)),
-                  width: MediaQuery.of(context).size.width/1.5,
-                  height: 50,
-                  child: Center(child: Text("بحث",style: TextStyle(fontSize: 20,color: Colors.white),)),
-                ),
-              ),
-              Spacer(),
+              _buildQrView(context),
+              if(result!=null)
+              Column(
+                children: [
+                  Spacer(),
+                  Spacer(),
+                  Spacer(),
+                  InkWell(
+                    onTap: (){
+                      Navigator.pop(context,result?.code);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(color: orange,borderRadius: BorderRadius.circular(15)),
+                      width: MediaQuery.of(context).size.width/1.5,
+                      height: 50,
+                      child: Center(child: Text("بحث",style: TextStyle(fontSize: 20,color: Colors.white),)),
+                    ),
+                  ),
+                  Spacer(),
+                ],
+              )
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 50),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.white,
+                  child: Center(
+                    child: IconButton(
+                        iconSize: 25,
+                        onPressed: (){
+                          controller!.pauseCamera();
+                          controller!.dispose();
+                        Navigator.pop(context);
+                    }, icon: Icon(Icons.arrow_back_ios_new,color: blue,)),
+                  ),
+                ),
+                Spacer(),
+                Text("مسح كود QR",style: TextStyle(fontSize: 25),textDirection: TextDirection.rtl,),
+                Spacer(),
+                FutureBuilder<bool?>(
+                    future: controller?.getFlashStatus(),
+                    builder: (context,snapshot){
+                    return CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.white,
+                      child: Center(
+                        child: IconButton(
+                            iconSize: 25,
+                            onPressed: (){
+                          controller?.toggleFlash();
+                          setState(() {});
+                        }, icon: Icon(snapshot.data! ?Icons.lightbulb_rounded:Icons.lightbulb_outline_rounded,color: orange,)),
+                      ),
+                    );
+
+                })
+              ],
+            ),
           )
         ],
       ),

@@ -25,16 +25,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<get_course_event>(get_course_void);
     on<get_course_details_event>(get_course_details_void);
     on<get_file_details_event>(get_file_details_void);
+    on<get_exam_details_event>(get_exam_details_void);
     on<watch_event>(watch_void);
     on<get_exam_event>(get_exam_void);
     on<get_file_event>(get_file_void);
     on<search_event>(search_void);
+    on<logs_event>(logs_void);
   }
   user_module? user_model;
   List<subject_module> subject_list=[];
   List<teacher_module> teacher_list=[];
   List<course_module> course_list=[];
   List<part_module> part_list=[];
+  List<String> logs_list=[];
   List<String> part_tab_list=[];
   List<Map> all_file_list=[];
   List<Map<String,dynamic>> all_exam_list=[];
@@ -42,13 +45,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   String main_banner_image="";
   Future<FutureOr<void>> init_void(init event, Emitter<MainState> emit) async {
     try{
-      await dio.get_data(url: "/index/banner").then((value) {
-        main_banner_image = value?.data[0]["banner"];
-      });
-      await dio.post_data(url:"/account/login_id",quary: {
-        "user_id":cache.get_data("id"),
+      await dio.post_data(url:"/index/login_id",quary: {
+        //"user_id":cache.get_data("id"),
         "secret_code":cache.get_data("scode"),
-      }).then((value){
+      }).then((value)async{
         if(value?.data == "error1"){
           // emit(error_login("تم تسجيل الدخول من جوال اخر"));
         }else if(value?.data == "error2"){
@@ -59,15 +59,21 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           // cache.save_data("id", user_model?.id);
           // emit(scss_login(user_model?.name));
         }
+      }).catchError((e){
+      });
+
+      await dio.get_data(url: "/index/banner").then((value) {
+        main_banner_image = value?.data[0]["banner"];
       });
       subject_list.clear();
-      await dio.get_data(url: "/index/subject",quary: {"user_id":cache.get_data("id")}).then((value) {
+      await dio.get_data(url: "/index/subject").then((value) {
         value?.data.forEach((e){
           subject_list.add(subject_module.fromjson(e));
         });
       });
 
-    }catch (e){print(e.toString());}
+    }catch (e){
+    }
    finally{
       emit(init_state());
    }
@@ -117,14 +123,19 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Map<int,List<int>> video_index_map  = {};
 
   Future<FutureOr<void>> get_course_details_void(get_course_details_event event, Emitter<MainState> emit) async {
-    print("start");
     try{
+      await dio.get_data(url:"/index/user_logs").then((value) {
+        print(value?.data);
+        if(value?.data![0]['logs']!= "" &&value!.data[0]['logs'].toString().split(",").length>1){
+          logs_list = value.data[0]['logs'].toString().split(",");
+        }
+      });
       await dio.get_data(url:"/index/part",quary: {
         "subject":event.subject,
         "grade":event.grade,
         "teacher_name":event.teacher,
         "course":event.course,
-        "user_id":cache.get_data("id"),
+       // "user_id":cache.get_data("id"),
         "is_course":1,
       }).then((value) {
         video_index_map.clear();
@@ -181,10 +192,13 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   Future<FutureOr<void>> init_porfile1_void(init_porfile1 event, Emitter<MainState> emit) async {
-    await dio.post_data(url:"/account/login_id",quary: {
-      "user_id":cache.get_data("id"),
+    await dio.post_data(url:"/index/login_id",quary: {
+   //   "user_id":cache.get_data("id"),
       "secret_code":cache.get_data("scode"),
     }).then((value){
+      print("0000");
+      print(value?.data);
+      print("0000");
       if(value?.data == "error1"){
         // emit(error_login("تم تسجيل الدخول من جوال اخر"));
       }else if(value?.data == "error2"){
@@ -203,7 +217,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     course_list.clear();
     my_file_list.clear();
     emit(loading_porfile_state());
-   await dio.get_data(url: "/index/my_course",quary: {"user_id":cache.get_data("id"),"is_course":event.type}).then((value) {
+   await dio.get_data(url: "/index/my_course",quary: {
+    // "user_id":cache.get_data("id"),
+     "is_course":event.type}).then((value) {
      if(value?.data =='notfound10'||value?.data[0].length==0 || value?.data ==' '){
        emit(empty_profile_state());
      }else {
@@ -227,7 +243,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
 
   Future<FutureOr<void>> get_exam_void(get_exam_event event, Emitter<MainState> emit) async {
-    await dio.get_data(url:"/index/exam",quary: {"subject":event.subject,"grade":event.grade}).then((value) {
+    await dio.get_data(url:"/index/exam",quary: {"subject":event.subject,"grade":event.grade,"teatcher":event.teatcher}).then((value) {
       all_exam_list.clear();
       value?.data.forEach((element){
         all_exam_list.add(element);
@@ -240,7 +256,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   }
   void check_version (){
     print("start check");
-    dio.get_data(url: "/index/version").then((value) async {
+    dio.get_data(url: "/data/version").then((value) async {
       PackageInfo.fromPlatform().then((valuee) {
         if(value?.data[0]['version']==valuee.version){
         }else{
@@ -284,7 +300,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         "grade":event.grade,
         "teacher_name":event.teacher,
         "file":event.file,
-        "user_id":cache.get_data("id"),
+       // "user_id":cache.get_data("id"),
         "is_course":0,
       }).then((value) {
         if(value?.data=="notfound"){
@@ -317,7 +333,46 @@ class MainBloc extends Bloc<MainEvent, MainState> {
       // emit(course_state());
     }
   }
+  Future<FutureOr<void>> get_exam_details_void(get_exam_details_event event, Emitter<MainState> emit) async {
+    try{
+      await dio.get_data(url:"/index/my_exam",quary: {
+        "subject":event.subject,
+        "grade":event.grade,
+        "teacher_name":event.teacher,
+        "exam":event.exam,
+        // "user_id":cache.get_data("id"),
+        "is_course":2,
+      }).then((value) {
+        if(value?.data=="notfound"){
+          emit(not_sub_exam_state());
+          print("okada");
+        }else {
+          // value?.data.forEach((e){
+          //   part_list.add(part_module.fromjson(e));
+          // });
+          emit(get_exam_link_state());
+        }
 
+        // value?.data.forEach((e){
+        // //  course_list.add(course_module.fromjson(e));
+        //   // teacher_list.add(teacher_module.fromjson(e));
+        // });
+
+      });
+    }catch(e){
+      print(e);
+    }finally{
+      // print(part_list[0].name);
+      // print(part_list[0].part?[0].name);
+      // print(part_list[0].part?[0].res);
+      // part_list.forEach((element) {
+      //   part_tab_list.add(element.name!);
+      // });
+
+      // emit(sub_state());
+      // emit(course_state());
+    }
+  }
   List<teacher_module> serarch_list= [];
   List<teacher_module> sec_teacher_list= [];
 
@@ -337,5 +392,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   void restore_list(){
     teacher_list = sec_teacher_list;
     emit(serch_state());
+  }
+
+  FutureOr<void> logs_void(logs_event event, Emitter<MainState> emit) {
+    if(!logs_list.contains(event.name)){
+      logs_list.add(event.name);
+      dio.post_data(url: "/index/user_logs",quary: {"data":event.name+","});
+      print("object "*20);
+      logs_list.forEach((element) {print(element); });
+     // emit(logs_state());
+    }
   }
 }

@@ -27,7 +27,7 @@ dio.get_data(url: "/data/Coupon_points_of_sale",).then((value) {
   }
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       appBar: appbar_back("أماكن بيع أكواد التفعيل"),
       body: list_location.isEmpty

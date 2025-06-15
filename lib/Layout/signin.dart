@@ -28,7 +28,7 @@ class Signin extends StatelessWidget {
   final user_module? data;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     var is_loadin = false;
     if (!init && type == "edit") {
       init = true;
@@ -74,7 +74,7 @@ class Signin extends StatelessWidget {
                       children: [
                         Card(child: BackButton(color: blue), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), elevation: 1),
                         Spacer(),
-                        Image.asset("assets/onboard_logo.jpg", width: 100),
+                        Image.asset("assets/onboard_logo.png", width: 100),
                       ],
                     ),
                     SizedBox(
@@ -271,6 +271,7 @@ class Signin extends StatelessWidget {
                             StatefulBuilder(builder: (context, statee) {
                               return TextButton(
                                 onPressed: () {
+
                                   if (_name_con.text.length > 1 && _number_con.text.length == 8 && !is_loadin) {
                                     statee(() {
                                       is_loadin = true;

@@ -4,6 +4,11 @@ part of 'main_bloc.dart';
 abstract class MainEvent {}
 class init extends MainEvent{}
 class init_porfile1 extends MainEvent{}
+class logs_event extends MainEvent{
+  final name;
+
+  logs_event(this.name);
+}
 class init_porfile2 extends MainEvent{
   final type;
 
@@ -39,8 +44,9 @@ class watch_event extends MainEvent{
 class get_exam_event extends MainEvent{
   final grade ;
   final subject ;
+  final teatcher ;
 
-  get_exam_event(this.grade, this.subject);
+  get_exam_event(this.grade, this.subject,this.teatcher);
 
 }
 class get_file_event extends MainEvent{
@@ -57,6 +63,14 @@ class get_file_details_event extends MainEvent{
   final file;
 
   get_file_details_event( this.grade, this.subject, this.teacher,this.file);
+}
+class get_exam_details_event extends MainEvent{
+  final subject;
+  final grade;
+  final teacher;
+  final exam;
+
+  get_exam_details_event( this.grade, this.subject, this.teacher,this.exam);
 }
 
 class search_event extends MainEvent{

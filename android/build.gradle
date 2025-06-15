@@ -2,21 +2,30 @@ buildscript {
     ext.kotlin_version = '1.8.0'
     repositories {
         google()
-        mavenCentral()
+        mavenLocal()
+        jcenter()
         maven { url 'https://developer.huawei.com/repo/' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.3.0'
+
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
         classpath 'com.huawei.agconnect:agcp:1.8.0.300'
+        classpath 'com.google.gms:google-services:4.3.10'
     }
 }
 
 allprojects {
+    project.configurations.all {
+        resolutionStrategy {
+            force 'androidx.work:work-runtime:2.7.0'
+        }
+    }
     repositories {
         google()
-        mavenCentral()
+        mavenLocal()
+        jcenter()
         maven { url 'https://developer.huawei.com/repo/' }
     }
 }
@@ -29,6 +38,6 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-task clean(type: Delete) {
+tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }

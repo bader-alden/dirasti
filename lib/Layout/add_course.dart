@@ -27,7 +27,7 @@ class AddCourse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
       create: (context) => CoponBloc(),
       child: BlocConsumer<CoponBloc, CoponState>(
@@ -348,12 +348,12 @@ class AddCourse extends StatelessWidget {
                         onTap: () {
                           var a = text_con1.text + "-" + text_con2.text + "-" + text_con3.text;
                           if(copon_serch!.uid_copon == a){
+                            //todo
                            context.read<CoponBloc>().add(add_state_event(a));
                           }else{
+                            //todo
                             context.read<CoponBloc>().add(serch_copon_event(a));
                           }
-
-
                         },
                         child: Container(
                             width: double.infinity,

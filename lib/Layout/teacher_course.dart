@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../module/subject_module.dart';
+import 'all_exam.dart';
 import 'all_file.dart';
 var _teacher_con = TextEditingController();
 class TeacherCourse extends StatelessWidget {
@@ -16,7 +17,7 @@ class TeacherCourse extends StatelessWidget {
 final type;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
       create: (context) => MainBloc()..add(get_teatcher_event(subject.id,subject.grade)),
       child: BlocConsumer<MainBloc, MainState>(
@@ -26,7 +27,7 @@ final type;
         builder: (context, state) {
           return Scaffold(
             backgroundColor: white,
-            appBar: appbar_back((type =="course"?"كورسات مادة ":"ملفات مادة ") + subject.subject!),
+            appBar: appbar_back((type =="course"?"كورسات مادة ":type =="file"?"ملفات مادة ":"اختبار مادة") + subject.subject!),
             body: Column(
               children: [
                 SizedBox(height: 30,),
@@ -75,8 +76,10 @@ Widget techer_course_list_item(BuildContext context, int index,teacher_module mo
       onTap: () {
         if(type == "course"){
           Navigator.push(context, MaterialPageRoute(builder: (context) => AllCourse(subject: subject,teacher: model,)));
-        }else{
+        }else if(type == "file"){
           Navigator.push(context, MaterialPageRoute(builder: (context) => AllFile(subject: subject,teacher: model,)));
+        }else{
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> AllExam(subject: subject,teacher: model,)));
         }
       },
       child: Card(

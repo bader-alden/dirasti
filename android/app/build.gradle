@@ -23,17 +23,21 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.google-services'
+
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.huawei.agconnect'
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+def keystorePropertiesFile = rootProject.file('my-release-key.keystore')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
-
+    buildFeatures {
+        viewBinding true
+    }
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -49,32 +53,32 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.dirasti.dirasti"
+        applicationId "com.badr.dirasti"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion 23
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
-    signingConfigs {
-
-        debug {
-            keyAlias 'upload'
-            keyPassword 'iq8da4d'
-//            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storeFile file('upload-keystore.jks')
-            storePassword  'iq8da4d'
-        }
-
-        release {
-            keyAlias 'upload'
-            keyPassword 'iq8da4d'
-//            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storeFile file('upload-keystore.jks')
-            storePassword  'iq8da4d'
-        }
-    }
+//    signingConfigs {
+//
+//        debug {
+//            keyAlias 'upload'
+//            keyPassword 'iq8da4d'
+////            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+//            storeFile file('0upload-keystore.jks')
+//            storePassword  'iq8da4d'
+//        }
+//
+//        release {
+//            keyAlias 'upload'
+//            keyPassword 'iq8da4d'
+////            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+//            storeFile file('0upload-keystore.jks')
+//            storePassword  'iq8da4d'
+//        }
+//    }
 //    signingConfigs {
 //        release {
 //            keyAlias keystoreProperties['keyAlias']
@@ -83,21 +87,25 @@ android {
 //            storePassword keystoreProperties['storePassword']
 //        }
 //    }
-
-    buildTypes {
-
-        debug {
-            signingConfig signingConfigs.debug
-//           proguardFiles getDefaultProguardFile('upload-keystore.jks'), 'proguard-rules.pro'
-        }
-
+    signingConfigs {
         release {
-            signingConfig signingConfigs.release
-            minifyEnabled true
-//            useProguard true
-//            proguardFiles getDefaultProguardFile('upload-keystore.jks'), 'proguard-rules.pro'
+            keyAlias 'alias_name'
+            keyPassword 'Modar@2023'
+           // storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storeFile file('my-release-key.keystore')
+            storePassword 'Modar@2023'
         }
     }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+//           proguardFiles getDefaultProguardFile('0upload-keystore.jks'), 'proguard-rules.pro'
+        }
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+
 //    buildTypes {
 //        release {
 //            // TODO: Add your own signing config for the release build.
@@ -118,5 +126,6 @@ dependencies {
     implementation "androidx.test:core:1.5.0"
     implementation 'com.huawei.agconnect:agconnect-core:1.6.5.300'
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
+
    // implementation "com.huawei.agconnect:agcp:1.8.0.300"
 }

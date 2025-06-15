@@ -16,11 +16,11 @@ class OnBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
         body: SafeArea(
           child: FutureBuilder(
-            future:  dio.get_data(url: "/index/version"),
+            future:  dio.get_data(url: "/data/version"),
             builder: (context,snapshot) {
               if(snapshot.data!=null){
                 PackageInfo.fromPlatform().then((valuee) {
@@ -35,7 +35,7 @@ class OnBoard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 15,),
-                  Expanded(flex: 1,child: Image.asset("assets/onboard_logo.jpg")),
+                  Expanded(flex: 1,child: Image.asset("assets/onboard_logo.png")),
                       SizedBox(height: 15,),
                   Expanded(flex: 3,child: Stack(
                     alignment: Alignment.center,
@@ -54,9 +54,9 @@ class OnBoard extends StatelessWidget {
                   Expanded(flex: 4,child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("طريقك نحو النجاح ",style: TextStyle(color: blue,fontSize: 35,fontWeight: FontWeight.bold)),
+                      // Text("نسخة تجريبية",style: TextStyle(color: blue,fontSize: 35,fontWeight: FontWeight.bold)),
+                     Text("طريقك نحو النجاح ",style: TextStyle(color: blue,fontSize: 35,fontWeight: FontWeight.bold)),
                       SizedBox(height: 15,),
-                  //    Text("طريقك نحو النجاح "*3,style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),textDirection: TextDirection.rtl),
                       SizedBox(height: 10,),
                       TextButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context) => Signin(),)), child: Container(width: MediaQuery.of(context).size.width/1.2,height: 60,decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: blue),child: Center(child: Text("إنشاء حساب",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18)),),),),
                       SizedBox(height: 20,),

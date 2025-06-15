@@ -14,7 +14,7 @@ class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     bool _is_loading = false;
     return Scaffold(
       body: BlocProvider(
@@ -48,7 +48,7 @@ class Login extends StatelessWidget {
                 children: [
                   Card(child: BackButton(color: blue),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),elevation: 1),
                   Spacer(),
-                  Image.asset( "assets/onboard_logo.jpg",width: 100),
+                  Image.asset( "assets/onboard_logo.png",width: 100),
                 ],
               ),
               SizedBox(height: 30,),

@@ -10,7 +10,7 @@ final link;
 final title;
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
        appBar: appbar_back(title),
       body:  Container(

@@ -17,7 +17,7 @@ class Setting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
@@ -39,7 +39,7 @@ class Setting extends StatelessWidget {
             dio.get_data(url: "/index/version").then((value) async {
               Navigator.pop(context);
              // launchUrl(Uri.parse(value?.data[0]["link"]),mode:LaunchMode.externalNonBrowserApplication );
-              final bytes = await rootBundle.load('assets/share.jpg');
+              final bytes = await rootBundle.load('assets/share.png');
               final list = bytes.buffer.asUint8List();
               final tempDir = await getTemporaryDirectory();
               final file = await File('${tempDir.path}/share.jpg').create();

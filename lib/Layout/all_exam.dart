@@ -1,27 +1,31 @@
 import 'package:dirasti/module/subject_module.dart';
+import 'package:dirasti/module/teacher_module.dart';
 import 'package:dirasti/utils/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/main/main_bloc.dart';
+import '../main.dart';
 import 'exam_details.dart';
 
 class AllExam extends StatelessWidget {
-  const AllExam({Key? key, required this.subject}) : super(key: key);
+   AllExam({Key? key, required this.subject, required this.teacher}) : super(key: key);
   final subject_module subject;
+  final teacher_module teacher;
+  var v = 75;
 
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
 
     return BlocProvider(
-      create: (context) => MainBloc()..add(get_exam_event(subject.grade, subject.id)),
+      create: (context) => MainBloc()..add(get_exam_event(subject.grade, subject.id,teacher.id)),
       child: BlocConsumer<MainBloc, MainState>(
         listener: (context, state) {
-          // TODO: implement listener
         },
         builder: (context, state) {
+          var bloc_provider = context.read<MainBloc>();
           return Scaffold(
             appBar: appbar_back(subject.subject),
             body: Column(
@@ -46,7 +50,80 @@ class AllExam extends StatelessWidget {
                               SizedBox(width: 20,),
                               InkWell(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamDetails(subject: subject,exam: exam)));
+                               //   Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamDetails(subject: subject,exam: exam)));
+                                  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                  showDialog(
+                                      useSafeArea: false,
+                                      context: context, builder: (context)=>WillPopScope(
+                                    onWillPop: () async {
+                                      v = 75;
+                                      bloc_provider.emit(get_exam_state());
+                                      return await true;
+                                    },
+                                    child: BlocProvider.value(
+                                      value: bloc_provider,
+                                      child: BlocConsumer<MainBloc, MainState>(
+                                        listener: (context, state) async {
+                                          if(state is not_sub_exam_state){
+                                            v=250;
+                                            print("okkkkkkkkk");
+                                          }
+                                          if(state is get_exam_link_state){
+                                            v=75;
+                                            Navigator.pop(context);
+                                            print("freeeeeeeeeeeeee");
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ExamDetails(subject: subject,exam: exam)));
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context)=>Pdf(title: model["name"],link: state.link,)));
+                                          }
+                                        },
+                                        builder: (context, state) {
+                                          return Center(
+                                              child: AnimatedContainer(
+                                                  duration: Duration(milliseconds: 200),
+                                                  height: v.toDouble(),
+                                                  width: v.toDouble(),
+                                                  padding: EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(color:Colors.white,borderRadius: BorderRadius.circular(10)),
+                                                  child: state is not_sub_exam_state ?
+                                                  Center(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        Spacer(),
+                                                        Text("لم تقم بشراء الاختبار ",style: TextStyle(color: Colors.black,fontSize: 22),),
+                                                        Spacer(),
+                                                        Expanded(
+                                                          child: Material(
+                                                            child: InkWell(
+                                                              onTap: (){
+                                                                v = 75;
+                                                                bloc_provider.emit(get_exam_state());
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                                home_page_con.jumpToPage(1);
+                                                              },
+                                                              child: Container(
+                                                                width: double.infinity,
+                                                                decoration: BoxDecoration( color: orange,borderRadius: BorderRadius.circular(10)),
+                                                                child: Center(child: Text("شراء",style: TextStyle(color: Colors.black,fontSize: 22),)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                                      : Center(child: Image.asset("assets/loading.gif",width: 75,)))
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ));
+                                  print(exam['id']);
+                                  context.read<MainBloc>().add(get_exam_details_event(subject.grade, subject.id, teacher.id, exam['id'].toString()));
+                                  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                 },
                                 child: Center(
                                   child: Container(padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),

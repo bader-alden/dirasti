@@ -8,14 +8,15 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 import '../Bloc/main/main_bloc.dart';
 import '../main.dart';
-var v = 75;
 class AllFile extends StatelessWidget {
-  const AllFile({Key? key, required this.subject, required this.teacher}) : super(key: key);
+   AllFile({Key? key, required this.subject, required this.teacher}) : super(key: key);
   final subject_module subject;
   final teacher_module teacher;
+  var v = 75;
+
   @override
   Widget build(BuildContext context) {
-    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     return BlocProvider(
       create: (context) => MainBloc()..add(get_file_event(subject.grade, subject.id,teacher.id)),
       child: BlocConsumer<MainBloc, MainState>(

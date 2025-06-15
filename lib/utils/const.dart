@@ -1,4 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
@@ -11,8 +12,16 @@ Color white = Color.fromRGBO(250, 250, 250, 1.0);
 
 Widget banner_widget (String link) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30),
-    child: Container(width: double.infinity,height: 200,decoration: BoxDecoration(color: Colors.transparent,borderRadius: BorderRadius.circular(20)),child: Image.network(link,fit: BoxFit.fill),),
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Container(width: double.infinity,height: 200,decoration: BoxDecoration(color: Colors.transparent,borderRadius: BorderRadius.circular(20)),child:
+    //Image.network(link,fit: BoxFit.fill),
+    CachedNetworkImage(
+      imageUrl: link,
+      fit: BoxFit.fill,
+      //  placeholder: (context, url) => SizedBox(width: 25,height: 25,child: Center(child: CircularProgressIndicator(color: Colors.grey,))),
+      errorWidget: (context, url, error) => Icon(Icons.error,color: Colors.red,),
+    ),
+    ),
   );
 }
 void Tost(String msg, Color color) => Fluttertoast.showToast(
